@@ -23,7 +23,9 @@ public class UsersRelatedController {
 		return ub;
 	}
 
-	@RequestMapping(path = "/twins/users/{userDomain}/{userEmail}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/iob/users/{userDomain}/{userEmail}", 
+			method = RequestMethod.PUT, 
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateUser(@PathVariable("userDomain") String domain, @PathVariable("userEmail") String email,
 			@RequestBody UserBoundary user) {
 		user.getUserId().setDomain(domain);
