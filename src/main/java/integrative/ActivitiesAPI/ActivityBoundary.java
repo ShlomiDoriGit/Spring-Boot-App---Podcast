@@ -46,7 +46,7 @@ public class ActivityBoundary {
 	
 	public ActivityBoundary(ActivityIdBoundary activityId, String type, InstanceIdBoundary instance,
 			Date createdTimestamp, UserIdBoundary invokedBy, Map<String, Object> activityAttributes) {
-		super();
+		this();
 		this.activityId = activityId;
 		this.type = type;
 		this.instance = instance;

@@ -12,7 +12,7 @@ public class ActivityIdBoundary {
 	}
 	
 	public ActivityIdBoundary(String domain, String id) {
-		super();
+		this();
 		this.domain = domain;
 		this.id = id;
 	}

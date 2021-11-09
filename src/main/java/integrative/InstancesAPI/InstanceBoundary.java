@@ -49,7 +49,7 @@ public class InstanceBoundary {
 	public InstanceBoundary(InstanceIdBoundary instanceId, String type, String name, Boolean active,
 			Date createdTimestamp, UserIdBoundary createdBy, Location location,
 			Map<String, Object> instanceAttributes) {
-		super();
+		this();
 		this.instanceId = instanceId;
 		this.type = type;
 		this.name = name;

@@ -12,7 +12,7 @@ public class InstanceIdBoundary {
 	public InstanceIdBoundary() {}
 	
 	public InstanceIdBoundary(String domain, String id) {
-		super();
+		this();
 		this.domain = domain;
 		this.id = id;
 	}

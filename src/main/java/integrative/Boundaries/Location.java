@@ -13,7 +13,7 @@ public class Location {
 	}
 
 	public Location(Double lat, Double lng) {
-		super();
+		this();
 		this.lat = lat;
 		this.lng = lng;
 	}

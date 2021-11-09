@@ -14,7 +14,7 @@ public class UserIdBoundary {
 	}
 
 	public UserIdBoundary(String domain, String email) {
-		super();
+		this();
 		this.domain = domain;
 		this.email = email;
 	}

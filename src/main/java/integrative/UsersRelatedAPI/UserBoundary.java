@@ -22,7 +22,7 @@ public class UserBoundary {
 	}
 
 	public UserBoundary(UserIdBoundary userId, String role, String username, String avatar) {
-		super();
+		this();
 		this.userId = userId;
 		this.role = role;
 		this.username = username;

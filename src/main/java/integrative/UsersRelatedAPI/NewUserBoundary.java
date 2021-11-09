@@ -20,7 +20,7 @@ public class NewUserBoundary {
 	}
 	
 	public NewUserBoundary(String email, String role, String username, String avatar) {
-		super();
+		this();
 		this.email = email;
 		this.role = role;
 		this.username = username;
