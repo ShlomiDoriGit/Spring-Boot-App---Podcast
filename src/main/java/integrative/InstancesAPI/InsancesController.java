@@ -37,8 +37,8 @@ public class InsancesController {
 			@PathVariable("instanceId") String instanceId) {
 		instance.getInstanceId().setDomain(instance_domain);
 		instance.getInstanceId().setId(instanceId);
-		instance.getCreatedBy().setDomain(user_domain);
-		instance.getCreatedBy().setEmail(email);
+		instance.getCreatedBy().getUserId().setDomain(user_domain);
+		instance.getCreatedBy().getUserId().setEmail(email);
 	}
 	
 	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}", 
@@ -55,7 +55,7 @@ public class InsancesController {
 				"name",
 				true,
 				new Date(),
-				new UserIdBoundary(user_domain, email),
+				new CreatedByBoundary(new UserIdBoundary(user_domain, email)),
 				new Location(-1d, -1d),
 				null
 				);
@@ -74,7 +74,7 @@ public class InsancesController {
 						"name",
 						true,
 						new Date(),
-						new UserIdBoundary(user_domain, email),
+						new CreatedByBoundary(new UserIdBoundary(user_domain, email)),
 						new Location(-1d, -1d),
 						null
 						),
@@ -84,7 +84,7 @@ public class InsancesController {
 						"name",
 						true,
 						new Date(),
-						new UserIdBoundary(user_domain, email),
+						new CreatedByBoundary(new UserIdBoundary(user_domain, email)),
 						new Location(-1d, -1d),
 						null
 						)

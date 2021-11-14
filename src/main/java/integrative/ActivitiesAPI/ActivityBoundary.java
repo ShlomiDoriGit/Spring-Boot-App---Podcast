@@ -3,9 +3,6 @@ package integrative.ActivitiesAPI;
 import java.util.Date;
 import java.util.Map;
 
-import integrative.InstancesAPI.InstanceIdBoundary;
-import integrative.UsersRelatedAPI.UserIdBoundary;
-
 /*
  {
 	"activityId":{
@@ -37,15 +34,16 @@ import integrative.UsersRelatedAPI.UserIdBoundary;
 public class ActivityBoundary {
 	private ActivityIdBoundary activityId;
 	private String type;
-	private InstanceIdBoundary instance;
+	private ActivityInstanceBoundary instance;
 	private Date createdTimestamp;
-	private UserIdBoundary invokedBy;
+	private InvokeByBoundary invokedBy;
 	private Map<String, Object> activityAttributes;
-	
-	public ActivityBoundary() { }
-	
-	public ActivityBoundary(ActivityIdBoundary activityId, String type, InstanceIdBoundary instance,
-			Date createdTimestamp, UserIdBoundary invokedBy, Map<String, Object> activityAttributes) {
+
+	public ActivityBoundary() {
+	}
+
+	public ActivityBoundary(ActivityIdBoundary activityId, String type, ActivityInstanceBoundary instance,
+			Date createdTimestamp, InvokeByBoundary invokedBy, Map<String, Object> activityAttributes) {
 		this();
 		this.activityId = activityId;
 		this.type = type;
@@ -71,11 +69,11 @@ public class ActivityBoundary {
 		this.type = type;
 	}
 
-	public InstanceIdBoundary getInstance() {
+	public ActivityInstanceBoundary getInstance() {
 		return instance;
 	}
 
-	public void setInstance(InstanceIdBoundary instance) {
+	public void setInstance(ActivityInstanceBoundary instance) {
 		this.instance = instance;
 	}
 
@@ -87,11 +85,11 @@ public class ActivityBoundary {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public UserIdBoundary getInvokedBy() {
+	public InvokeByBoundary getInvokedBy() {
 		return invokedBy;
 	}
 
-	public void setInvokedBy(UserIdBoundary invokedBy) {
+	public void setInvokedBy(InvokeByBoundary invokedBy) {
 		this.invokedBy = invokedBy;
 	}
 
@@ -102,5 +100,5 @@ public class ActivityBoundary {
 	public void setActivityAttributes(Map<String, Object> activityAttributes) {
 		this.activityAttributes = activityAttributes;
 	}
-	
+
 }

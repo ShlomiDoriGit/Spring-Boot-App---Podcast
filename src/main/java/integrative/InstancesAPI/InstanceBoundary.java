@@ -40,14 +40,14 @@ public class InstanceBoundary {
 	private String name;
 	private Boolean active;
 	private Date createdTimestamp;
-	private UserIdBoundary createdBy;
+	private CreatedByBoundary createdBy;
 	private Location location;
 	private Map<String, Object> instanceAttributes;
 	
 	public InstanceBoundary() {}
 	
 	public InstanceBoundary(InstanceIdBoundary instanceId, String type, String name, Boolean active,
-			Date createdTimestamp, UserIdBoundary createdBy, Location location,
+			Date createdTimestamp, CreatedByBoundary createdBy, Location location,
 			Map<String, Object> instanceAttributes) {
 		this();
 		this.instanceId = instanceId;
@@ -100,11 +100,11 @@ public class InstanceBoundary {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public UserIdBoundary getCreatedBy() {
+	public CreatedByBoundary getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(UserIdBoundary createdBy) {
+	public void setCreatedBy(CreatedByBoundary createdBy) {
 		this.createdBy = createdBy;
 	}
 

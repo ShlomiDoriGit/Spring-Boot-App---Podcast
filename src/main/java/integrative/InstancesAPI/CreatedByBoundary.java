@@ -1,24 +1,25 @@
 package integrative.InstancesAPI;
 
+import integrative.UsersRelatedAPI.UserIdBoundary;
 
 public class CreatedByBoundary {
-	private CreatedByBoundary userId;
+	private UserIdBoundary userId;
 
 	public CreatedByBoundary() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CreatedByBoundary(CreatedByBoundary userId) {
+	public CreatedByBoundary(UserIdBoundary userId) {
 		this();
 		this.userId = userId;
 	}
 
-	public CreatedByBoundary getUserId() {
+	public UserIdBoundary getUserId() {
 		return userId;
 	}
 
-	public void setUserId(CreatedByBoundary userId) {
+	public void setUserId(UserIdBoundary userId) {
 		this.userId = userId;
 	}
 

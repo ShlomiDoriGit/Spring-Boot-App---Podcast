@@ -16,19 +16,16 @@ public class AdminAPIController {
 	@RequestMapping(path = "/iob/admin/users/{userDomain}/{userEmail}", method = RequestMethod.DELETE)
 	public void deleteUsersInDomain(@PathVariable("userDomain") String domain,
 			@PathVariable("userEmail") String email) {
-		// TODO
 	}
 
 	@RequestMapping(path = "/iob/admin/instances/{userDomain}/{userEmail}", method = RequestMethod.DELETE)
 	public void deleteInstancesInDomain(@PathVariable("userDomain") String domain,
 			@PathVariable("userEmail") String email) {
-		// TODO
 	}
 
 	@RequestMapping(path = "/iob/admin/activities/{userDomain}/{userEmail}", method = RequestMethod.DELETE)
 	public void deleteActivitiesInDomain(@PathVariable("userDomain") String domain,
 			@PathVariable("userEmail") String email) {
-		// TODO
 	}
 
 	@RequestMapping(path = "/iob/admin/users/{userDomain}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
