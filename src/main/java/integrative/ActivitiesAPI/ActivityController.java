@@ -18,7 +18,7 @@ public class ActivityController {
 				produces = MediaType.APPLICATION_JSON_VALUE,
 				consumes = MediaType.APPLICATION_JSON_VALUE)
 		public ActivityBoundary invokeAnInstanceActivity(@RequestBody ActivityBoundary activity) {
-		activity.setActivityId(new ActivityIdBoundary("123","domain"));	
+		activity.setActivityId(new ActivityId("123","domain"));	
 		return activity;
 		}
 

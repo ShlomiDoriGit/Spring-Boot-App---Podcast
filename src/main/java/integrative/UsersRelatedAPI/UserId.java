@@ -5,15 +5,15 @@ package integrative.UsersRelatedAPI;
 	"email":"user@demo.com"
 }
  */
-public class UserIdBoundary {
+public class UserId {
 	
 	private String domain;
 	private String email;
 
-	public UserIdBoundary() {
+	public UserId() {
 	}
 
-	public UserIdBoundary(String domain, String email) {
+	public UserId(String domain, String email) {
 		this();
 		this.domain = domain;
 		this.email = email;

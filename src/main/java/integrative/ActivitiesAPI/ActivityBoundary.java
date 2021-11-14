@@ -32,18 +32,18 @@ import java.util.Map;
 }
  */
 public class ActivityBoundary {
-	private ActivityIdBoundary activityId;
+	private ActivityId activityId;
 	private String type;
-	private ActivityInstanceBoundary instance;
+	private ActivityInstance instance;
 	private Date createdTimestamp;
-	private InvokeByBoundary invokedBy;
+	private InvokeBy invokedBy;
 	private Map<String, Object> activityAttributes;
 
 	public ActivityBoundary() {
 	}
 
-	public ActivityBoundary(ActivityIdBoundary activityId, String type, ActivityInstanceBoundary instance,
-			Date createdTimestamp, InvokeByBoundary invokedBy, Map<String, Object> activityAttributes) {
+	public ActivityBoundary(ActivityId activityId, String type, ActivityInstance instance,
+			Date createdTimestamp, InvokeBy invokedBy, Map<String, Object> activityAttributes) {
 		this();
 		this.activityId = activityId;
 		this.type = type;
@@ -53,11 +53,11 @@ public class ActivityBoundary {
 		this.activityAttributes = activityAttributes;
 	}
 
-	public ActivityIdBoundary getActivityId() {
+	public ActivityId getActivityId() {
 		return activityId;
 	}
 
-	public void setActivityId(ActivityIdBoundary activityId) {
+	public void setActivityId(ActivityId activityId) {
 		this.activityId = activityId;
 	}
 
@@ -69,11 +69,11 @@ public class ActivityBoundary {
 		this.type = type;
 	}
 
-	public ActivityInstanceBoundary getInstance() {
+	public ActivityInstance getInstance() {
 		return instance;
 	}
 
-	public void setInstance(ActivityInstanceBoundary instance) {
+	public void setInstance(ActivityInstance instance) {
 		this.instance = instance;
 	}
 
@@ -85,11 +85,11 @@ public class ActivityBoundary {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public InvokeByBoundary getInvokedBy() {
+	public InvokeBy getInvokedBy() {
 		return invokedBy;
 	}
 
-	public void setInvokedBy(InvokeByBoundary invokedBy) {
+	public void setInvokedBy(InvokeBy invokedBy) {
 		this.invokedBy = invokedBy;
 	}
 

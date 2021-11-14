@@ -1,17 +1,17 @@
-package integrative.InstancesAPI;
+package integrative.ActivitiesAPI;
 
 /*
 "domain":"2022a.demo",
-"id":"352"
+"id":"112"
 */
-
-public class InstanceIdBoundary {
+public class ActivityId {
 	private String domain;
 	private String id;
 	
-	public InstanceIdBoundary() {}
+	public ActivityId() {
+	}
 	
-	public InstanceIdBoundary(String domain, String id) {
+	public ActivityId(String domain, String id) {
 		this();
 		this.domain = domain;
 		this.id = id;
@@ -33,5 +33,5 @@ public class InstanceIdBoundary {
 		this.id = id;
 	}
 	
-	
+
 }

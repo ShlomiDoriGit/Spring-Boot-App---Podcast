@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import integrative.Boundaries.Location;
-import integrative.UsersRelatedAPI.UserIdBoundary;
+import integrative.UsersRelatedAPI.UserId;
 
 
 @RestController
@@ -50,12 +50,12 @@ public class InsancesController {
 			@PathVariable("instanceDomain") String instance_domain,
 			@PathVariable("instanceId") String instanceId) {
 		return new InstanceBoundary(
-				new InstanceIdBoundary(instance_domain, instanceId),
+				new InstanceId(instance_domain, instanceId),
 				"type",
 				"name",
 				true,
 				new Date(),
-				new CreatedByBoundary(new UserIdBoundary(user_domain, email)),
+				new CreatedBy(new UserId(user_domain, email)),
 				new Location(-1d, -1d),
 				null
 				);
@@ -69,22 +69,22 @@ public class InsancesController {
 			@PathVariable("userEmail") String email) {
 		return new InstanceBoundary[] {
 				new InstanceBoundary(
-						new InstanceIdBoundary("domain0", "Id0"),
+						new InstanceId("domain0", "Id0"),
 						"type",
 						"name",
 						true,
 						new Date(),
-						new CreatedByBoundary(new UserIdBoundary(user_domain, email)),
+						new CreatedBy(new UserId(user_domain, email)),
 						new Location(-1d, -1d),
 						null
 						),
 				new InstanceBoundary(
-						new InstanceIdBoundary("domain1", "Id1"),
+						new InstanceId("domain1", "Id1"),
 						"type",
 						"name",
 						true,
 						new Date(),
-						new CreatedByBoundary(new UserIdBoundary(user_domain, email)),
+						new CreatedBy(new UserId(user_domain, email)),
 						new Location(-1d, -1d),
 						null
 						)

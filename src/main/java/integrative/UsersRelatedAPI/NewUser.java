@@ -9,17 +9,17 @@ package integrative.UsersRelatedAPI;
 */
 
 
-public class NewUserBoundary {
+public class NewUser {
 	private String email;
 	private String role;
 	private String username;
 	private String avatar;
 	
 	
-	public NewUserBoundary() {
+	public NewUser() {
 	}
 	
-	public NewUserBoundary(String email, String role, String username, String avatar) {
+	public NewUser(String email, String role, String username, String avatar) {
 		this();
 		this.email = email;
 		this.role = role;

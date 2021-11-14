@@ -13,7 +13,7 @@ package integrative.UsersRelatedAPI;
 }
 */
 public class UserBoundary {
-	private UserIdBoundary userId;
+	private UserId userId;
 	private String role;
 	private String username;
 	private String avatar;
@@ -21,7 +21,7 @@ public class UserBoundary {
 	public UserBoundary() {
 	}
 
-	public UserBoundary(UserIdBoundary userId, String role, String username, String avatar) {
+	public UserBoundary(UserId userId, String role, String username, String avatar) {
 		this();
 		this.userId = userId;
 		this.role = role;
@@ -29,11 +29,11 @@ public class UserBoundary {
 		this.avatar = avatar;
 	}
 
-	public UserIdBoundary getUserId() {
+	public UserId getUserId() {
 		return userId;
 	}
 
-	public void setUserId(UserIdBoundary userId) {
+	public void setUserId(UserId userId) {
 		this.userId = userId;
 	}
 

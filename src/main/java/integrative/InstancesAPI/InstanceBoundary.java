@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import integrative.Boundaries.Location;
-import integrative.UsersRelatedAPI.UserIdBoundary;
+import integrative.UsersRelatedAPI.UserId;
 
 /*
  {
@@ -35,19 +35,19 @@ import integrative.UsersRelatedAPI.UserIdBoundary;
 }
  */
 public class InstanceBoundary {
-	private InstanceIdBoundary instanceId;
+	private InstanceId instanceId;
 	private String type;
 	private String name;
 	private Boolean active;
 	private Date createdTimestamp;
-	private CreatedByBoundary createdBy;
+	private CreatedBy createdBy;
 	private Location location;
 	private Map<String, Object> instanceAttributes;
 	
 	public InstanceBoundary() {}
 	
-	public InstanceBoundary(InstanceIdBoundary instanceId, String type, String name, Boolean active,
-			Date createdTimestamp, CreatedByBoundary createdBy, Location location,
+	public InstanceBoundary(InstanceId instanceId, String type, String name, Boolean active,
+			Date createdTimestamp, CreatedBy createdBy, Location location,
 			Map<String, Object> instanceAttributes) {
 		this();
 		this.instanceId = instanceId;
@@ -60,11 +60,11 @@ public class InstanceBoundary {
 		this.instanceAttributes = instanceAttributes;
 	}
 
-	public InstanceIdBoundary getInstanceId() {
+	public InstanceId getInstanceId() {
 		return instanceId;
 	}
 
-	public void setInstanceId(InstanceIdBoundary instanceId) {
+	public void setInstanceId(InstanceId instanceId) {
 		this.instanceId = instanceId;
 	}
 
@@ -100,11 +100,11 @@ public class InstanceBoundary {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public CreatedByBoundary getCreatedBy() {
+	public CreatedBy getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(CreatedByBoundary createdBy) {
+	public void setCreatedBy(CreatedBy createdBy) {
 		this.createdBy = createdBy;
 	}
 

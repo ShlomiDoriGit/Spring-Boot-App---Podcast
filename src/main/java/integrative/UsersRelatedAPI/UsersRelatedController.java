@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UsersRelatedController {
 	@RequestMapping(path = "/iob/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary createNewUser(@RequestBody NewUserBoundary user) {
-		UserBoundary ub = new UserBoundary(new UserIdBoundary("2022a.podcast", user.getEmail()), user.getRole(),
+	public UserBoundary createNewUser(@RequestBody NewUser user) {
+		UserBoundary ub = new UserBoundary(new UserId("2022a.podcast", user.getEmail()), user.getRole(),
 				user.getUsername(), user.getAvatar());
 		return ub;
 	}
@@ -19,7 +19,7 @@ public class UsersRelatedController {
 	@RequestMapping(path = "/iob/users/login/{userDomain}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary loginValidUser(@PathVariable("userDomain") String domain,
 			@PathVariable("userEmail") String email) {
-		UserBoundary ub = new UserBoundary(new UserIdBoundary(domain, email), "User", "Test", "L");
+		UserBoundary ub = new UserBoundary(new UserId(domain, email), "User", "Test", "L");
 		return ub;
 	}
 
