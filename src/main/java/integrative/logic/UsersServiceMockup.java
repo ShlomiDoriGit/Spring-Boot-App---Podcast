@@ -15,7 +15,7 @@ import integrative.data.UserRole;
 
 
 @Service
-public class UsersServiceMockup implements InstancesService{
+public class UsersServiceMockup implements UsersService{
 	
 	private String appName;
 	private Map<String, UserEntity> users;
