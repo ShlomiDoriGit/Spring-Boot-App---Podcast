@@ -1,38 +1,40 @@
 package integrative.data;
 
-
 public class UserEntity {
 
-	private String userId;
+	private String userId_Domain;
+	private String userId_email;
 	private UserRole role;
 	private String username;
 	private String avatar;
-	
+
 	public UserEntity() {
 		super();
 	}
 
-
-	public String getUserId() {
-		return userId;
+	public String getUserId_Domain() {
+		return userId_Domain;
 	}
 
-
-
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserId_Domain(String userId_Domain) {
+		this.userId_Domain = userId_Domain;
 	}
 
+	public String getUserId_email() {
+		return userId_email;
+	}
+
+	public void setUserId_email(String userId_email) {
+		this.userId_email = userId_email;
+	}
 
 	public UserRole getRole() {
 		return role;
 	}
 
-
 	public void setRole(UserRole role) {
 		this.role = role;
 	}
-
 
 	public String getUsername() {
 		return username;

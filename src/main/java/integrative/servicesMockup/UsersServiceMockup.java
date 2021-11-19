@@ -1,4 +1,4 @@
-package integrative.logic;
+package integrative.servicesMockup;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import integrative.UsersRelatedAPI.UserBoundary;
+import integrative.converters.EntityConverter;
 import integrative.data.UserEntity;
 import integrative.data.UserRole;
+import integrative.logic.UsersService;
 
 
 @Service
@@ -49,7 +51,8 @@ public class UsersServiceMockup implements UsersService{
 		
 		user.getUserId().setDomain(appName);	
 		UserEntity entity = this.entityConverter.fromBoundary(user);
-		this.users.put(entity.getUserId(), entity);
+		this.users.put(entity.getUsername(), entity);
+		//TODO check this line ^
 		return this.entityConverter.toBoundary(entity);
 	}
 	
