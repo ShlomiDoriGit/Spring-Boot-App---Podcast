@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import integrative.UsersRelatedAPI.UserBoundary;
 import integrative.converters.EntityConverter;
+import integrative.converters.UserConverter;
 import integrative.data.UserEntity;
 import integrative.data.UserRole;
 import integrative.logic.UsersService;
@@ -21,10 +22,10 @@ public class UsersServiceMockup implements UsersService{
 	
 	private String appName;
 	private Map<String, UserEntity> users;
-	private EntityConverter entityConverter;
+	private UserConverter userConverter;
 	
 	//Constructor
-	public UsersServiceMockup(EntityConverter entityConverter) {
+	public UsersServiceMockup(UserConverter userConverter) {
 		super();
 		this.users = Collections.synchronizedMap(new HashMap<>());
 	}
@@ -35,8 +36,8 @@ public class UsersServiceMockup implements UsersService{
 	}
 	
 	@Autowired
-	public void setEntityConverter(EntityConverter entityConverter) {
-		this.entityConverter = entityConverter;
+	public void setEntityConverter(UserConverter userConverter) {
+		this.userConverter = userConverter;
 	}
 	
 	@Override
@@ -44,23 +45,23 @@ public class UsersServiceMockup implements UsersService{
 		try {
 		       UserRole temp = UserRole.valueOf(user.getRole());
 		    } catch (IllegalArgumentException ex) {  
-		    	throw new RuntimeException("could not create user by role: " +user.getRole());
+		    	throw new RuntimeException("could not create user by role: " + user.getRole());
 		  }
 		if(user.getUserId().getEmail() == null || user.getUserId().getEmail() == "")
 			throw new RuntimeException("could not create user with no email");
 		
 		user.getUserId().setDomain(appName);	
-		UserEntity entity = this.entityConverter.fromBoundary(user);
+		UserEntity entity = this.userConverter.convertToEntity(user);
 		this.users.put(entity.getUsername(), entity);
 		//TODO check this line ^
-		return this.entityConverter.toBoundary(entity);
+		return this.userConverter.convertToBoundary(entity);
 	}
 	
 	@Override
 	public UserBoundary login(String userSpace, String userEmail) {
 		UserEntity entity = this.users.get(userSpace+"@@"+userEmail);
 		if (entity != null) {
-			UserBoundary boundary = entityConverter.toBoundary(entity);
+			UserBoundary boundary = userConverter.convertToBoundary(entity);
 			return boundary;
 		}else {
 			// TODO have server return status 404 here
@@ -83,7 +84,7 @@ public class UsersServiceMockup implements UsersService{
 			    } catch (IllegalArgumentException ex) {}
 			if (update.getUsername()!=null)
 				entity.setUsername(update.getUsername());
-			return this.entityConverter.toBoundary(entity); //previously returned update
+			return this.userConverter.convertToBoundary(entity); //previously returned update
 		} else {
 			// TODO have server return status 404 here
 			throw new RuntimeException("could not find user");// NullPointerException
@@ -96,7 +97,7 @@ public class UsersServiceMockup implements UsersService{
 		return this.users
 				.values()
 				.stream()
-				.map(this.entityConverter::toBoundary)
+				.map(this.userConverter::convertToBoundary)
 				.collect(Collectors.toList());
 	}
 
