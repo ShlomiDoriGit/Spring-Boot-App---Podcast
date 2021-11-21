@@ -2,30 +2,30 @@ package integrative.data;
 
 public class UserEntity {
 
-	private String userId_Domain;
-	private String userId_email;
+	private String userIdDomain;
+	private String userIdEmail;
 	private UserRole role;
-	private String username;
+	private String userName;
 	private String avatar;
 
 	public UserEntity() {
 		super();
 	}
 
-	public String getUserId_Domain() {
-		return userId_Domain;
+	public String getUserIdDomain() {
+		return userIdDomain;
 	}
 
-	public void setUserId_Domain(String userId_Domain) {
-		this.userId_Domain = userId_Domain;
+	public void setUserIdDomain(String userIdDomain) {
+		this.userIdDomain = userIdDomain;
 	}
 
-	public String getUserId_email() {
-		return userId_email;
+	public String getUserIdEmail() {
+		return userIdEmail;
 	}
 
-	public void setUserId_email(String userId_email) {
-		this.userId_email = userId_email;
+	public void setUserIdEmail(String userIdEmail) {
+		this.userIdEmail = userIdEmail;
 	}
 
 	public UserRole getRole() {
@@ -36,12 +36,12 @@ public class UserEntity {
 		this.role = role;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getAvatar() {
@@ -51,4 +51,11 @@ public class UserEntity {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
+
+	@Override
+	public String toString() {
+		return "UserEntity [userIdDomain=" + userIdDomain + ", userIdEmail=" + userIdEmail + ", role=" + role
+				+ ", username=" + userName + ", avatar=" + avatar + "]";
+	}
+
 }

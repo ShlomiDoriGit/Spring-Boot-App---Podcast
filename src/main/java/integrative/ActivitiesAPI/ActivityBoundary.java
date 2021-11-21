@@ -26,7 +26,7 @@ import java.util.Map;
 	"activityAttributes":{
 		"key1":"can be set to any value you wish",
 		"key2":{
-			"key2Subkey1":"can be nested json"
+			"key2Subkey1":52.0
 		}
 	}
 }

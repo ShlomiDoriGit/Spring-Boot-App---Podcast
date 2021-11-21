@@ -5,14 +5,14 @@ import java.util.Map;
 
 public class InstanceEntity {
 
-	private String domain;
-	private String id;
+	private String instanceDomain;
+	private String instanceId;
 	private String type;
 	private String name;
 	private boolean active;
 	private Date createdTimestamp;
-	private String userDomain;
-	private String userEmail;
+	private String createdByUserDomain;
+	private String createdByUserEmail;
 	private double lat;
 	private double lng;
 	private Map<String, Object> instanceAttributes;
@@ -21,20 +21,20 @@ public class InstanceEntity {
 		super();
 	}
 
-	public String getDomain() {
-		return domain;
+	public String getInstanceDomain() {
+		return instanceDomain;
 	}
 
-	public void setDomain(String domain) {
-		this.domain = domain;
+	public void setInstanceDomain(String instanceDomain) {
+		this.instanceDomain = instanceDomain;
 	}
 
-	public String getId() {
-		return id;
+	public String getInstanceId() {
+		return instanceId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
 	}
 
 	public String getType() {
@@ -44,7 +44,7 @@ public class InstanceEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -69,20 +69,20 @@ public class InstanceEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public String getUserDomain() {
-		return userDomain;
+	public String getCreatedByUserDomain() {
+		return createdByUserDomain;
 	}
 
-	public void setUserDomain(String userDomain) {
-		this.userDomain = userDomain;
+	public void setCreatedByUserDomain(String createdByUserDomain) {
+		this.createdByUserDomain = createdByUserDomain;
 	}
 
-	public String getUserEmail() {
-		return userEmail;
+	public String getCreatedByUserEmail() {
+		return createdByUserEmail;
 	}
 
-	public void setUserEmail(String serEmail) {
-		this.userEmail = serEmail;
+	public void setCreatedByUserEmail(String createdByUserEmail) {
+		this.createdByUserEmail = createdByUserEmail;
 	}
 
 	public double getLat() {
@@ -109,4 +109,12 @@ public class InstanceEntity {
 		this.instanceAttributes = instanceAttributes;
 	}
 
+	@Override
+	public String toString() {
+		return "InstanceEntity [instanceDomain=" + instanceDomain + ", instanceId=" + instanceId + ", type=" + type
+				+ ", name=" + name + ", active=" + active + ", createdTimestamp=" + createdTimestamp
+				+ ", createdByUserDomain=" + createdByUserDomain + ", createdByUserEmail=" + createdByUserEmail
+				+ ", lat=" + lat + ", lng=" + lng + ", instanceAttributes=" + instanceAttributes + "]";
+	}
+	
 }

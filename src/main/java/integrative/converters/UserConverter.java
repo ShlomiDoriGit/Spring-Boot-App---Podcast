@@ -13,18 +13,18 @@ public class UserConverter {
 	public UserEntity convertToEntity(UserBoundary boundary) {
 		UserEntity entity = new UserEntity();
 		// Default
-		entity.setUserId_Domain("2022a.demo");
-		entity.setUserId_email("user@demo.com");
+		entity.setUserIdDomain("2022a.demo");
+		entity.setUserIdEmail("user@demo.com");
 		entity.setRole(UserRole.PLAYER);
-		entity.setUsername("demo");
+		entity.setUserName("demo");
 		entity.setAvatar("demo");
 
 		if (boundary.getUserId() != null) {
 			if (boundary.getUserId().getDomain() != null) {
-				entity.setUserId_Domain(boundary.getUserId().getDomain());
+				entity.setUserIdDomain(boundary.getUserId().getDomain());
 			}
 			if (boundary.getUserId().getEmail() != null) {
-				entity.setUserId_email(boundary.getUserId().getEmail());
+				entity.setUserIdEmail(boundary.getUserId().getEmail());
 			}
 		}
 		
@@ -33,7 +33,7 @@ public class UserConverter {
 		}
 		
 		if (boundary.getUsername() != null) {
-			entity.setUsername(boundary.getUsername());
+			entity.setUserName(boundary.getUsername());
 		}
 		
 		if (boundary.getAvatar() != null) {
@@ -45,9 +45,9 @@ public class UserConverter {
 
 	public UserBoundary convertToBoundary(UserEntity entity) {
 		UserBoundary boundary = new UserBoundary();
-		boundary.setUserId(new UserId(entity.getUserId_Domain(), entity.getUserId_email()));
+		boundary.setUserId(new UserId(entity.getUserIdDomain(), entity.getUserIdEmail()));
 		boundary.setRole(entity.getRole().name());
-		boundary.setUsername(entity.getUsername());
+		boundary.setUsername(entity.getUserName());
 		boundary.setAvatar(entity.getAvatar());
 		return boundary;
 	}

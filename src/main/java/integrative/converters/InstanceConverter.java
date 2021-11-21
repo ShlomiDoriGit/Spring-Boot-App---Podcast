@@ -18,28 +18,26 @@ public class InstanceConverter {
 	public InstanceEntity convertToEntity(InstanceBoundary boundary) {
 		InstanceEntity entity = new InstanceEntity();
 		// default
-		entity.setDomain("2022a.demo");
-		entity.setId("352");
+		entity.setInstanceDomain("2022a.demo");
+		entity.setInstanceId("352");
 		entity.setType("dummyInstanceType");
-		entity.setUserDomain("2022a.demo");
-		entity.setUserEmail("user2@demo.com");
+		entity.setCreatedByUserDomain("2022a.demo");
+		entity.setCreatedByUserEmail("user2@demo.com");
 		entity.setLat(32.115139);
 		entity.setLng(34.817804);
-//		Map<String, Object> m = Map.of("key1", "can be set to any value you wish", "key2",
-//				"you can also name the attributes any name you like", "key3", 6.2, "key4", false);
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("key1", "can be set to any value you wish");
 		m.put("key2","you can also name the attributes any name you like");
 		m.put("key3", 6.2);
 		m.put("key4", false);
-		// m.put(null, "key1", "can be set to any value you wish");
+		
 		entity.setInstanceAttributes(m);
 		if (boundary.getInstanceId() != null) {
 			if (boundary.getInstanceId().getDomain() != null) {
-				entity.setDomain(boundary.getInstanceId().getDomain());
+				entity.setInstanceDomain(boundary.getInstanceId().getDomain());
 			}
 			if (boundary.getInstanceId().getId() != null) {
-				entity.setId(boundary.getInstanceId().getId());
+				entity.setInstanceId(boundary.getInstanceId().getId());
 			}
 
 		}
@@ -57,10 +55,10 @@ public class InstanceConverter {
 		}
 		if (boundary.getCreatedBy().getUserId() != null) {
 			if (boundary.getCreatedBy().getUserId().getDomain() != null) {
-				entity.setUserDomain(boundary.getCreatedBy().getUserId().getDomain());
+				entity.setCreatedByUserDomain(boundary.getCreatedBy().getUserId().getDomain());
 			}
 			if (boundary.getCreatedBy().getUserId().getEmail() != null) {
-				entity.setUserEmail(boundary.getCreatedBy().getUserId().getEmail());
+				entity.setCreatedByUserEmail(boundary.getCreatedBy().getUserId().getEmail());
 			}
 			if (boundary.getLocation() != null) {
 				if (boundary.getLocation().getLat() != null) {
@@ -79,12 +77,12 @@ public class InstanceConverter {
 
 	public InstanceBoundary convertToBoundary(InstanceEntity entity) {
 		InstanceBoundary boundary = new InstanceBoundary();
-		boundary.setInstanceId(new InstanceId(entity.getDomain(), entity.getId()));
+		boundary.setInstanceId(new InstanceId(entity.getInstanceDomain(), entity.getInstanceId()));
 		boundary.setType(entity.getType());
 		boundary.setName(entity.getName());
 		boundary.setActive(entity.getActive());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
-		boundary.setCreatedBy(new CreatedBy(new UserId(entity.getUserDomain(), entity.getUserEmail())));
+		boundary.setCreatedBy(new CreatedBy(new UserId(entity.getCreatedByUserDomain(), entity.getCreatedByUserEmail())));
 		boundary.setLocation(new Location(entity.getLat(), entity.getLng()));
 		boundary.setInstanceAttributes(entity.getInstanceAttributes());
 		return boundary;
