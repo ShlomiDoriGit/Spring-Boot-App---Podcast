@@ -4,8 +4,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import integrative.ActivitiesAPI.ActivityBoundary;
 import integrative.converters.ActivityConverter;
@@ -16,35 +21,42 @@ public class ActivitiesServiceMockup implements ActivitiesService {
 
 	private Map<String, ActivityEntity> activities;
 	private ActivityConverter activityConverter;
-
-	//Constructor
-	public ActivitiesServiceMockup(ActivityConverter converter) {
-		super();
-		this.activities=Collections.synchronizedMap(new HashMap<>());
-	}
+	private String appName;
 
 	@Autowired
 	public void setConverter(ActivityConverter activityConverter) {
 		this.activityConverter = activityConverter;
 	}
-	
-	
+
+	@PostConstruct
+	public void init() {
+		this.activities = Collections.synchronizedMap(new HashMap<>());
+	}
+
+	@Value("${spring.application.name:defaultName}")
+	public void setSpringApplicatioName(String appName) {
+		this.appName = appName;
+	}
+
 	@Override
 	public Object invokeActivity(ActivityBoundary activity) {
-		// TODO Auto-generated method stub
-		return null;
+		//TODO : After Eyal's anwer
+		ActivityEntity entity = this.activityConverter.convertToEntity(activity);
+		entity.setActivityId(UUID.randomUUID().toString());
+		entity.setActivityDomain(appName);
+		this.activities.put(entity.getActivityDomain()+"@"+entity.getActivityId(), entity);
+		return this.activityConverter.convertToBoundary(entity);
 	}
 
 	@Override
-	public List<ActivityBoundary> getAllActivities(String adminSpace, String adminEmail) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail) {
+		return this.activities.values().stream()
+				.map(this.activityConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
-	public void deleteAllActivities(String adminSpace, String adminEmail) {
-		// TODO Auto-generated method stub
-		
+	public void deleteAllActivities(String adminDomain, String adminEmail) {
+		this.activities.clear();
 	}
 
 }

@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import integrative.InstancesAPI.InstanceBoundary;
 import integrative.converters.InstanceConverter;
@@ -16,19 +19,21 @@ import integrative.logic.InstancesService;
 public class InstacesServiceMockup implements InstancesService {
 	private Map<String, InstanceEntity> instances;
 	private InstanceConverter instanceConverter;
-
-	//TODO check if needed appName like UserBoundary
-	//TODO check how we put the id for searching and putting a new Instance
-
-	// Constructor
-	public InstacesServiceMockup(InstanceConverter converter) {
-		super();
-		this.instances = Collections.synchronizedMap(new HashMap<>());
-	}
+	private String appName;
 
 	@Autowired
 	public void setConverter(InstanceConverter converter) {
 		this.instanceConverter = converter;
+	}
+
+	@PostConstruct
+	public void init() {
+		this.instances = Collections.synchronizedMap(new HashMap<>());
+	}
+
+	@Value("${spring.application.name:defaultName}")
+	public void setSpringApplicatioName(String appName) {
+		this.appName = appName;
 	}
 
 	@Override
@@ -40,50 +45,56 @@ public class InstacesServiceMockup implements InstancesService {
 		if (instance == null)
 			throw new RuntimeException("Could not create an instance without instance boundary");
 		InstanceEntity entity = this.instanceConverter.convertToEntity(instance);
-		entity.setUserDomain(userDomain);
-		entity.setUserEmail(userEmail);
-		this.instances.put(entity.getUserEmail() + "@" + entity.getUserDomain(), entity);
+		entity.setCreatedByUserDomain(appName);
+		entity.setCreatedByUserEmail(userEmail);
+		this.instances.put(entity.getInstanceDomain() + "@@" + entity.getInstanceId(), entity);
 		return this.instanceConverter.convertToBoundary(entity);
-		// TODO check this method, instance ID
 	}
 
 	@Override
 	public InstanceBoundary updateInstance(String userDomain, String userEmail, String instanceDomain,
 			String InstanceId, InstanceBoundary update) {
-		InstanceEntity entity = this.instances.get(userEmail + "@" + userDomain);
-
-		if (entity != null) {
-			if (update.getType() != null)
+		InstanceEntity entity = this.instances.get(instanceDomain + "@@" + InstanceId);
+		if (entity == null) {
+			throw new RuntimeException("Could not find instance");
+		}
+		if (entity.getCreatedByUserDomain().equals(userDomain) && entity.getCreatedByUserEmail().equals(userEmail)) {
+			if (update.getType() != null) {
 				entity.setType(update.getType());
-			if (update.getName() != null)
+			}
+			if (update.getName() != null) {
 				entity.setName(update.getName());
-			if (update.getActive() != null)
+			}
+			if (update.getActive() != null) {
 				entity.setActive(update.getActive());
+			}
 			// CreatedTimeStamp don't need to be changed
 			if (update.getLocation() != null) {
-				if (update.getLocation().getLat() != null)
+				if (update.getLocation().getLat() != null) {
 					entity.setLat(update.getLocation().getLat());
-				if (update.getLocation().getLng() != null)
+				}
+				if (update.getLocation().getLng() != null) {
 					entity.setLng(update.getLocation().getLng());
+				}
 			}
 			if (update.getInstanceAttributes() != null)
 				entity.setInstanceAttributes(update.getInstanceAttributes());
-		} else {
-			throw new RuntimeException("Could not find instance");
 		}
-		return null;
+		return this.instanceConverter.convertToBoundary(entity);
 	}
 
 	@Override
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail) {
-		return this.instances.values().stream().map(this.instanceConverter::convertToBoundary)
-				.collect(Collectors.toList());
+		return this.instances.values().stream()
+				.filter(instance -> instance.getCreatedByUserDomain().equals(userDomain)
+						&& instance.getCreatedByUserDomain().equals(userEmail))
+				.map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
 	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String InstanceDomain,
 			String instanceId) {
-		return this.instanceConverter.convertToBoundary(this.instances.get(userEmail + "@" + userDomain));
+		return this.instanceConverter.convertToBoundary(this.instances.get(userEmail + "@@" + userDomain));
 	}
 
 	@Override

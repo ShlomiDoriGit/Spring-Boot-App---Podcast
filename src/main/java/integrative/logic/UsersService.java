@@ -8,12 +8,12 @@ public interface UsersService {
 	
 	public UserBoundary createUser(UserBoundary user);
 
-	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update);
+	public UserBoundary updateUser(String userDomain, String userEmail, UserBoundary update);
 
-	public UserBoundary login(String userSpace, String userEmail);
+	public UserBoundary login(String userDomain, String userEmail);
 
-	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail);
+	public List<UserBoundary> getAllUsers(String adminDomain, String adminEmail);
 
-	public void deleteAllUsers(String adminSpace, String adminEmail);
+	public void deleteAllUsers(String adminDomain, String adminEmail);
 	
 }

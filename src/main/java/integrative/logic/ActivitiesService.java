@@ -8,8 +8,8 @@ public interface ActivitiesService {
 
 	public Object invokeActivity(ActivityBoundary activity);
 
-	public List<ActivityBoundary> getAllActivities(String adminSpace, String adminEmail);
+	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail);
 
-	public void deleteAllActivities(String adminSpace, String adminEmail);
+	public void deleteAllActivities(String adminDomain, String adminEmail);
 
 }
