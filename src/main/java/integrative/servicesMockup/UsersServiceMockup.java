@@ -22,6 +22,8 @@ import integrative.logic.UsersService;
 public class UsersServiceMockup implements UsersService {
 
 	private String appName;
+	// KeyFormat:
+	// <UserIdDomain>"@@"<UserIdEmail>
 	private Map<String, UserEntity> users;
 	private UserConverter userConverter;
 
@@ -43,6 +45,7 @@ public class UsersServiceMockup implements UsersService {
 	@Override
 	public UserBoundary createUser(UserBoundary user) {
 		try {
+			@SuppressWarnings("unused")
 			UserRole temp = UserRole.valueOf(user.getRole());
 		} catch (IllegalArgumentException ex) {
 			throw new RuntimeException("could not create user by role: " + user.getRole());
@@ -60,35 +63,36 @@ public class UsersServiceMockup implements UsersService {
 	@Override
 	public UserBoundary login(String userDomain, String userEmail) {
 		UserEntity entity = this.users.get(userDomain + "@@" + userEmail);
-		if (entity != null) {
-			UserBoundary boundary = userConverter.convertToBoundary(entity);
-			return boundary;
-		} else {
+		if (entity == null) {
 			// have server return status 404 here
 			throw new RuntimeException("could not find user by email: " + userEmail);// NullPointerException
 		}
+
+		UserBoundary boundary = userConverter.convertToBoundary(entity);
+		return boundary;
 	}
 
 	@Override
 	public UserBoundary updateUser(String userDomain, String userEmail, UserBoundary update) {
 		UserEntity entity = this.users.get(userDomain + "@@" + userEmail);
-		if (entity != null) {
-			if (update.getAvatar() != null)
-				entity.setAvatar(update.getAvatar());
-			try {
-				UserRole temp = UserRole.valueOf(entity.getRole().toString());
-				if (update.getRole() != null)
-					entity.setRole(temp);
-			} catch (IllegalArgumentException ex) { // Not supposed to happen
-				throw new RuntimeException("Cannot convert to userRole");
-			}
-			if (update.getUsername() != null)
-				entity.setUserName(update.getUsername());
-			return this.userConverter.convertToBoundary(entity); // previously returned update
-		} else {
+		if (entity == null) {
 			// TODO have server return status 404 here
 			throw new RuntimeException("Could not find user");// NullPointerException
 		}
+
+		if (update.getAvatar() != null)
+			entity.setAvatar(update.getAvatar());
+		try {
+			UserRole temp = UserRole.valueOf(entity.getRole().toString());
+			if (update.getRole() != null)
+				entity.setRole(temp);
+		} catch (IllegalArgumentException ex) { // Not supposed to happen
+			throw new RuntimeException("Cannot convert to userRole");
+		}
+		if (update.getUsername() != null)
+			entity.setUserName(update.getUsername());
+		return this.userConverter.convertToBoundary(entity); // previously returned update
+
 	}
 
 	@Override

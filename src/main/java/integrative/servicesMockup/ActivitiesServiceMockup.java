@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -19,9 +18,12 @@ import integrative.logic.ActivitiesService;
 
 public class ActivitiesServiceMockup implements ActivitiesService {
 
+	private String appName;
+	// KeyFormat:
+	// <ActivityDomain>"@@"<ActivityId>
 	private Map<String, ActivityEntity> activities;
 	private ActivityConverter activityConverter;
-	private String appName;
+	
 
 	@Autowired
 	public void setConverter(ActivityConverter activityConverter) {
@@ -40,11 +42,12 @@ public class ActivitiesServiceMockup implements ActivitiesService {
 
 	@Override
 	public Object invokeActivity(ActivityBoundary activity) {
-		//TODO : After Eyal's anwer
+		//TODO : After Eyal's answer
 		ActivityEntity entity = this.activityConverter.convertToEntity(activity);
-		entity.setActivityId(UUID.randomUUID().toString());
+		//entity.setActivityId(UUID.randomUUID().toString());
+		
 		entity.setActivityDomain(appName);
-		this.activities.put(entity.getActivityDomain()+"@"+entity.getActivityId(), entity);
+		this.activities.put(entity.getActivityDomain()+"@@"+entity.getActivityId(), entity);
 		return this.activityConverter.convertToBoundary(entity);
 	}
 

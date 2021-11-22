@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Map;
 
 import integrative.Boundaries.Location;
-import integrative.UsersRelatedAPI.UserId;
 
 /*
  {

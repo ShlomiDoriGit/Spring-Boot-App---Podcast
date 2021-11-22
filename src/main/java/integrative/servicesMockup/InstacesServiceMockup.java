@@ -17,9 +17,12 @@ import integrative.data.InstanceEntity;
 import integrative.logic.InstancesService;
 
 public class InstacesServiceMockup implements InstancesService {
+	
+	private String appName;
+	// KeyFormat:
+	// <InstanceDomain>"@@"<InstanceId>
 	private Map<String, InstanceEntity> instances;
 	private InstanceConverter instanceConverter;
-	private String appName;
 
 	@Autowired
 	public void setConverter(InstanceConverter converter) {
@@ -44,6 +47,7 @@ public class InstacesServiceMockup implements InstancesService {
 			throw new RuntimeException("Could not create an instance without user's email");
 		if (instance == null)
 			throw new RuntimeException("Could not create an instance without instance boundary");
+		
 		InstanceEntity entity = this.instanceConverter.convertToEntity(instance);
 		entity.setCreatedByUserDomain(appName);
 		entity.setCreatedByUserEmail(userEmail);
@@ -58,6 +62,7 @@ public class InstacesServiceMockup implements InstancesService {
 		if (entity == null) {
 			throw new RuntimeException("Could not find instance");
 		}
+		
 		if (entity.getCreatedByUserDomain().equals(userDomain) && entity.getCreatedByUserEmail().equals(userEmail)) {
 			if (update.getType() != null) {
 				entity.setType(update.getType());
@@ -94,7 +99,7 @@ public class InstacesServiceMockup implements InstancesService {
 	@Override
 	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String InstanceDomain,
 			String instanceId) {
-		return this.instanceConverter.convertToBoundary(this.instances.get(userEmail + "@@" + userDomain));
+		return this.instanceConverter.convertToBoundary(this.instances.get(InstanceDomain + "@@" + instanceId));
 	}
 
 	@Override

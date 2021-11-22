@@ -3,10 +3,6 @@ package integrative.data;
 import java.util.Date;
 import java.util.Map;
 
-import integrative.ActivitiesAPI.ActivityId;
-import integrative.ActivitiesAPI.ActivityInstance;
-import integrative.ActivitiesAPI.InvokeBy;
-
 public class ActivityEntity {
 	private String activityId;
 	private String activityDomain;

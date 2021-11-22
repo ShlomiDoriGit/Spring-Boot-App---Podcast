@@ -29,6 +29,10 @@ public class UserBoundary {
 		this.avatar = avatar;
 	}
 
+	public UserBoundary(NewUser newUser) {
+		this(new UserId("demo", newUser.getEmail()), newUser.getRole(), newUser.getUsername(), newUser.getAvatar());
+	}
+
 	public UserId getUserId() {
 		return userId;
 	}
