@@ -10,12 +10,14 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import integrative.InstancesAPI.InstanceBoundary;
 import integrative.converters.InstanceConverter;
 import integrative.data.InstanceEntity;
 import integrative.logic.InstancesService;
 
+@Service
 public class InstacesServiceMockup implements InstancesService {
 	
 	private String appName;

@@ -10,12 +10,14 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import integrative.ActivitiesAPI.ActivityBoundary;
 import integrative.converters.ActivityConverter;
 import integrative.data.ActivityEntity;
 import integrative.logic.ActivitiesService;
 
+@Service
 public class ActivitiesServiceMockup implements ActivitiesService {
 
 	private String appName;
