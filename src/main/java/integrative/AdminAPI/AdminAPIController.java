@@ -48,14 +48,14 @@ public class AdminAPIController {
 	@RequestMapping(path = "/iob/admin/users/{userDomain}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] exportAllUsers(@PathVariable("userDomain") String domain,
 			@PathVariable("userEmail") String email) {
-		return (UserBoundary[]) usersService.getAllUsers(domain, email).toArray();
+		return usersService.getAllUsers(domain, email).stream().toArray(UserBoundary[]::new);
 	}
 
 	@RequestMapping(path = "/iob/admin/activities/{userDomain}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ActivityBoundary[] exportAllActivities(@PathVariable("userDomain") String domain,
 			@PathVariable("userEmail") String email) {
 		// I don't like the casting :(
-		return (ActivityBoundary[]) activitiesService.getAllActivities(domain, email).toArray();
+		return activitiesService.getAllActivities(domain, email).stream().toArray(ActivityBoundary[]::new);
 	}
 
 }

@@ -1,6 +1,5 @@
 package integrative.InstancesAPI;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +43,6 @@ public class InstancesController {
 	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public InstanceBoundary[] retrieveAllInstance(@PathVariable("userDomain") String user_domain,
 			@PathVariable("userEmail") String email) {
-		return (InstanceBoundary[]) instancesSrevice.getAllInstances(user_domain, email).toArray();
+		return instancesSrevice.getAllInstances(user_domain, email).stream().toArray(InstanceBoundary[]::new);
 	}
 }

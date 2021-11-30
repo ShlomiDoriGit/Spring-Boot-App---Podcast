@@ -3,6 +3,7 @@ package integrative.converters;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import integrative.Boundaries.Location;
@@ -15,14 +16,21 @@ import integrative.data.InstanceEntity;
 @Component
 public class InstanceConverter {
 
+	private String appName;
+	
+	@Value("${spring.application.name:defaultName}")
+	public void setSpringApplicatioName(String appName) {
+		this.appName = appName;
+	}
+	
 	public InstanceEntity convertToEntity(InstanceBoundary boundary) {
 		InstanceEntity entity = new InstanceEntity();
 		// default
-		entity.setInstanceDomain("2022a.demo");
+		entity.setInstanceDomain(appName);
 		entity.setInstanceId("352");
 		entity.setType("dummyInstanceType");
-		entity.setCreatedByUserDomain("2022a.demo");
-		entity.setCreatedByUserEmail("user2@demo.com");
+		entity.setCreatedByUserDomain(appName);
+		entity.setCreatedByUserEmail("user2@@demo.com");
 		entity.setLat(32.115139);
 		entity.setLng(34.817804);
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -34,7 +42,7 @@ public class InstanceConverter {
 		entity.setInstanceAttributes(m);
 		if (boundary.getInstanceId() != null) {
 			if (boundary.getInstanceId().getDomain() != null) {
-				entity.setInstanceDomain(boundary.getInstanceId().getDomain());
+				entity.setInstanceDomain(appName);
 			}
 			if (boundary.getInstanceId().getId() != null) {
 				entity.setInstanceId(boundary.getInstanceId().getId());
@@ -77,7 +85,7 @@ public class InstanceConverter {
 
 	public InstanceBoundary convertToBoundary(InstanceEntity entity) {
 		InstanceBoundary boundary = new InstanceBoundary();
-		boundary.setInstanceId(new InstanceId(entity.getInstanceDomain(), entity.getInstanceId()));
+		boundary.setInstanceId(new InstanceId(this.appName, entity.getInstanceId()));
 		boundary.setType(entity.getType());
 		boundary.setName(entity.getName());
 		boundary.setActive(entity.getActive());
