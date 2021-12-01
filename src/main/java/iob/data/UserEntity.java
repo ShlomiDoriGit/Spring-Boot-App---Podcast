@@ -1,5 +1,15 @@
 package iob.data;
 
+
+//@Entity
+//@Table(name = "USERS")
+/* 
+ * USERS table:
+ * USER_ID_DOMAIN     |	USER_ID_EMAIL	| ROLE	|	USER_NAME 	| 	AVATAR	|
+ * VARCHAR(255) <PK>  |	VARCHAR(255)	| 		|
+ * 
+ * 
+ */
 public class UserEntity {
 
 	private String userIdDomain;
@@ -12,42 +22,51 @@ public class UserEntity {
 		super();
 	}
 
+
 	public String getUserIdDomain() {
 		return userIdDomain;
 	}
+
 
 	public void setUserIdDomain(String userIdDomain) {
 		this.userIdDomain = userIdDomain;
 	}
 
+	
 	public String getUserIdEmail() {
 		return userIdEmail;
 	}
 
+	
 	public void setUserIdEmail(String userIdEmail) {
 		this.userIdEmail = userIdEmail;
 	}
 
+	
 	public UserRole getRole() {
 		return role;
 	}
 
+	
 	public void setRole(UserRole role) {
 		this.role = role;
 	}
-
+	
 	public String getUserName() {
 		return userName;
 	}
 
+	
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
+	
 	public String getAvatar() {
 		return avatar;
 	}
 
+	
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
