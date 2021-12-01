@@ -1,6 +1,7 @@
 package iob.servicesMockup;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class ActivitiesServiceMockup implements ActivitiesService {
 		//entity.setActivityId(UUID.randomUUID().toString());
 		
 		entity.setActivityDomain(appName);
+		entity.setCreatedTimestamp(new Date());
 		this.activities.put(entity.getActivityDomain()+"@@"+entity.getActivityId(), entity);
 		return this.activityConverter.convertToBoundary(entity);
 	}
