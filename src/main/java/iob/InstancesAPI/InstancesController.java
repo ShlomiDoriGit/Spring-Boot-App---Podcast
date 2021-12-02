@@ -45,4 +45,54 @@ public class InstancesController {
 			@PathVariable("userEmail") String email) {
 		return instancesSrevice.getAllInstances(user_domain, email).stream().toArray(InstanceBoundary[]::new);
 	}
+	
+	
+	// Sprint 3
+	
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children", 
+			method = RequestMethod.PUT, 
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void bindExistingInstanceToExistingChildInstance(
+			@RequestBody InstanceId instanceIdBoundary,
+			@PathVariable("userDomain") String user_domain,
+			@PathVariable("userEmail") String email, 
+			@PathVariable("instanceDomain") String instance_domain,
+			@PathVariable("instanceId") String instanceId) {
+			// TODO
+	}
+	
+	
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children", 
+			method = RequestMethod.GET, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getAllChildrensOfExistingInstance(
+			@RequestBody InstanceId instanceIdBoundary,
+			@PathVariable("userDomain") String user_domain,
+			@PathVariable("userEmail") String email, 
+			@PathVariable("instanceDomain") String instance_domain,
+			@PathVariable("instanceId") String instanceId) {
+		// TODO
+		return null;
+	}
+	
+	
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/parent", 
+			method = RequestMethod.GET, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getInstanceParents(
+			@RequestBody InstanceId instanceIdBoundary,
+			@PathVariable("userDomain") String user_domain,
+			@PathVariable("userEmail") String email, 
+			@PathVariable("instanceDomain") String instance_domain,
+			@PathVariable("instanceId") String instanceId) {
+		// TODO
+		return null;
+	}
+	
+	
+	
+	// END Sprint 3
+	
+	
+	
 }
