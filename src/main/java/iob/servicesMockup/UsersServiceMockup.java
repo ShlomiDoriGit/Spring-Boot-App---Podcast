@@ -11,11 +11,11 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import iob.UsersRelatedAPI.UserBoundary;
 import iob.converters.UserConverter;
 import iob.data.UserEntity;
 import iob.data.UserRole;
+import iob.logic.UserNotFoundException;
 import iob.logic.UsersService;
 
 @Service
@@ -75,20 +75,20 @@ public class UsersServiceMockup implements UsersService {
 	@Override
 	public UserBoundary updateUser(String userDomain, String userEmail, UserBoundary update) {
 		UserEntity entity = this.users.get(userDomain + "@@" + userEmail);
+		
 		if (entity == null) {
-			// TODO have server return status 404 here
-			throw new RuntimeException("Could not find user");// NullPointerException
+		  throw new UserNotFoundException("Could not locate existing user by id: " + update.getUserId());
 		}
 
-		if (update.getAvatar() != null)
+		if (update.getAvatar() != null) {
 			entity.setAvatar(update.getAvatar());
-		try {
-			UserRole temp = UserRole.valueOf(entity.getRole().toString());
-			if (update.getRole() != null)
-				entity.setRole(temp);
-		} catch (IllegalArgumentException ex) { // Not supposed to happen
-			throw new RuntimeException("Cannot convert to userRole");
 		}
+		// TODO check update Role 
+		if (update.getRole() != null) {
+			entity.setRole(
+					UserRole.valueOf(entity.getRole().toString()));
+		}
+
 		if (update.getUsername() != null)
 			entity.setUserName(update.getUsername());
 		return this.userConverter.convertToBoundary(entity); // previously returned update

@@ -20,18 +20,25 @@ public class UsersRelatedController {
 		this.usersService = users;
 	}
 
-	@RequestMapping(path = "/iob/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/iob/users",
+			        method = RequestMethod.POST,
+			        produces = MediaType.APPLICATION_JSON_VALUE,
+			        consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createNewUser(@RequestBody NewUser user) {
 		return usersService.createUser(new UserBoundary(user));
 	}
 
-	@RequestMapping(path = "/iob/users/login/{userDomain}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/iob/users/login/{userDomain}/{userEmail}",
+			        method = RequestMethod.GET,
+			        produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary loginValidUser(@PathVariable("userDomain") String domain,
 			@PathVariable("userEmail") String email) {
 		return usersService.login(domain, email);
 	}
 
-	@RequestMapping(path = "/iob/users/{userDomain}/{userEmail}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/iob/users/{userDomain}/{userEmail}",
+			        method = RequestMethod.PUT,
+			        consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateUser(@PathVariable("userDomain") String domain, @PathVariable("userEmail") String email,
 			@RequestBody UserBoundary user) {
 		usersService.updateUser(domain, email, user);

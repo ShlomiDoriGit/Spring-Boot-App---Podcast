@@ -2,6 +2,7 @@ package iob.converters;
 
 import org.springframework.stereotype.Component;
 
+
 import iob.UsersRelatedAPI.UserBoundary;
 import iob.UsersRelatedAPI.UserId;
 import iob.data.UserEntity;
@@ -51,5 +52,6 @@ public class UserConverter {
 		boundary.setAvatar(entity.getAvatar());
 		return boundary;
 	}
+
 
 }
