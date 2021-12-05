@@ -19,7 +19,7 @@ import iob.converters.InstanceConverter;
 import iob.data.InstanceEntity;
 import iob.logic.InstancesService;
 
-@Service
+//@Service
 public class InstacesServiceMockup implements InstancesService {
 
 	private String appName;

@@ -1,6 +1,7 @@
 package iob.data;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -11,13 +12,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import iob.converters.IobMapToJsonConverter;
-
 
 /*
  * INSTANCES
@@ -27,7 +28,7 @@ import iob.converters.IobMapToJsonConverter;
  * <PK>              |                |              |              |           |                   |                        |                       |         |                              | <FK>        |
  */
 @Entity
-@Table(name="INSTANCES")
+@Table(name = "INSTANCES")
 public class InstanceEntity {
 
 	private String instanceDomain;
@@ -41,14 +42,16 @@ public class InstanceEntity {
 	private double lat;
 	private double lng;
 	private Map<String, Object> instanceAttributes;
-	
-	private InstanceEntity origin;
-	private Set<InstanceEntity> responses;
+
+	private Set<InstanceEntity> origins;
+	private Set<InstanceEntity> childrens;
 
 	public InstanceEntity() {
-		super();
+		this.childrens = new HashSet<>();
+		this.origins = new HashSet<>();
 	}
-	@Column(name="INSTANCE_DOMAIN")
+
+	@Column(name = "INSTANCE_DOMAIN")
 	public String getInstanceDomain() {
 		return instanceDomain;
 	}
@@ -56,7 +59,8 @@ public class InstanceEntity {
 	public void setInstanceDomain(String instanceDomain) {
 		this.instanceDomain = instanceDomain;
 	}
-	@Column(name="INSTANCE_ID")
+
+	@Column(name = "INSTANCE_ID")
 	@Id
 	public String getInstanceId() {
 		return instanceId;
@@ -65,7 +69,8 @@ public class InstanceEntity {
 	public void setInstanceId(String instanceId) {
 		this.instanceId = instanceId;
 	}
-	@Column(name="TYPE")
+
+	@Column(name = "TYPE")
 	public String getType() {
 		return type;
 	}
@@ -73,7 +78,8 @@ public class InstanceEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	@Column(name="NAME")
+
+	@Column(name = "NAME")
 	public String getName() {
 		return name;
 	}
@@ -89,6 +95,7 @@ public class InstanceEntity {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
@@ -97,7 +104,8 @@ public class InstanceEntity {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	@Column(name="CREATE_BY_USER_DOMAIN")
+
+	@Column(name = "CREATE_BY_USER_DOMAIN")
 	public String getCreatedByUserDomain() {
 		return createdByUserDomain;
 	}
@@ -105,7 +113,8 @@ public class InstanceEntity {
 	public void setCreatedByUserDomain(String createdByUserDomain) {
 		this.createdByUserDomain = createdByUserDomain;
 	}
-	@Column(name="CREATE_BY_USER_EMAIL")
+
+	@Column(name = "CREATE_BY_USER_EMAIL")
 	public String getCreatedByUserEmail() {
 		return createdByUserEmail;
 	}
@@ -113,7 +122,7 @@ public class InstanceEntity {
 	public void setCreatedByUserEmail(String createdByUserEmail) {
 		this.createdByUserEmail = createdByUserEmail;
 	}
-	
+
 	public double getLat() {
 		return lat;
 	}
@@ -129,6 +138,7 @@ public class InstanceEntity {
 	public void setLng(double lng) {
 		this.lng = lng;
 	}
+
 	@Convert(converter = IobMapToJsonConverter.class)
 	@Lob
 	public Map<String, Object> getInstanceAttributes() {
@@ -138,28 +148,37 @@ public class InstanceEntity {
 	public void setInstanceAttributes(Map<String, Object> instanceAttributes) {
 		this.instanceAttributes = instanceAttributes;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	public InstanceEntity getOrigin() {
-		return origin;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	public Set<InstanceEntity> getOrigins() {
+		return origins;
 	}
-	public void setOrigin(InstanceEntity origin) {
-		this.origin = origin;
+
+	public void setOrigins(Set<InstanceEntity> origins) {
+		this.origins = origins;
 	}
-	@OneToMany(mappedBy = "origin", fetch = FetchType.LAZY)
-	public Set<InstanceEntity> getResponses() {
-		return responses;
+
+	public void addOrigin(InstanceEntity origin) {
+		this.origins.add(origin);
 	}
-	public void setResponses(Set<InstanceEntity> responses) {
-		this.responses = responses;
+
+	@ManyToMany(mappedBy = "origins", fetch = FetchType.LAZY)
+	public Set<InstanceEntity> getchildrens() {
+		return childrens;
 	}
-	public void addResponse (InstanceEntity response) {
-		this.responses.add(response);
+	public void setChildrens(Set<InstanceEntity> childrens) {
+		this.childrens = childrens;
 	}
-	
+
+	public void addChildren(InstanceEntity children) {
+		this.childrens.add(children);
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(instanceId);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -171,6 +190,7 @@ public class InstanceEntity {
 		InstanceEntity other = (InstanceEntity) obj;
 		return Objects.equals(instanceId, other.instanceId);
 	}
+
 	@Override
 	public String toString() {
 		return "InstanceEntity [instanceDomain=" + instanceDomain + ", instanceId=" + instanceId + ", type=" + type
@@ -178,5 +198,5 @@ public class InstanceEntity {
 				+ ", createdByUserDomain=" + createdByUserDomain + ", createdByUserEmail=" + createdByUserEmail
 				+ ", lat=" + lat + ", lng=" + lng + ", instanceAttributes=" + instanceAttributes + "]";
 	}
-	
+
 }

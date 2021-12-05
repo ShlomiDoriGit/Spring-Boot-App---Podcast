@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import iob.logic.InstancesService;
+import iob.logic.EnhancedInstancesService;
 
 @RestController
 public class InstancesController {
 
-	private InstancesService instancesSrevice;
+	private EnhancedInstancesService instancesSrevice;
 
 	@Autowired
-	public InstancesController(InstancesService instancesSrevice) {
+	public InstancesController(EnhancedInstancesService instancesSrevice) {
 		this.instancesSrevice = instancesSrevice;
 	}
 
@@ -47,7 +47,7 @@ public class InstancesController {
 	}
 	
 	
-	// Sprint 3
+	// Sprint 4
 	
 	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children", 
 			method = RequestMethod.PUT, 
@@ -58,7 +58,7 @@ public class InstancesController {
 			@PathVariable("userEmail") String email, 
 			@PathVariable("instanceDomain") String instance_domain,
 			@PathVariable("instanceId") String instanceId) {
-			// TODO
+			instancesSrevice.bindExistingInstanceToExistingChildInstance(instanceIdBoundary, user_domain, email, instance_domain, instanceId);
 	}
 	
 	
@@ -71,8 +71,7 @@ public class InstancesController {
 			@PathVariable("userEmail") String email, 
 			@PathVariable("instanceDomain") String instance_domain,
 			@PathVariable("instanceId") String instanceId) {
-		// TODO
-		return null;
+		return instancesSrevice.getAllChildrensOfExistingInstance(instanceIdBoundary, user_domain, email, instance_domain, instanceId).toArray(new InstanceBoundary[0]);
 	}
 	
 	
@@ -85,13 +84,10 @@ public class InstancesController {
 			@PathVariable("userEmail") String email, 
 			@PathVariable("instanceDomain") String instance_domain,
 			@PathVariable("instanceId") String instanceId) {
-		// TODO
-		return null;
+		return instancesSrevice.getInstanceParents(instanceIdBoundary, user_domain, email, instance_domain, instanceId).toArray(new InstanceBoundary[0]);
 	}
 	
-	
-	
-	// END Sprint 3
+	// END Sprint 4
 	
 	
 	

@@ -18,7 +18,7 @@ import iob.converters.ActivityConverter;
 import iob.data.ActivityEntity;
 import iob.logic.ActivitiesService;
 
-@Service
+//@Service
 public class ActivitiesServiceMockup implements ActivitiesService {
 
 	private String appName;

@@ -3,7 +3,9 @@ package iob.servicesJPA;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -15,14 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 import iob.Dao.InstanceDao;
 import iob.Dao.UserDao;
 import iob.InstancesAPI.InstanceBoundary;
+import iob.InstancesAPI.InstanceId;
 import iob.converters.InstanceConverter;
 import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
+import iob.logic.EnhancedInstancesService;
 import iob.logic.InstancesService;
 
 @Service
-public class InstanceServiceJPA implements InstancesService {
+public class InstanceServiceJPA implements EnhancedInstancesService{
 
 	private String appName;
 	private UserDao userDao;
@@ -157,7 +161,7 @@ public class InstanceServiceJPA implements InstancesService {
 		if(optionalUser.isPresent()) {
 			user = optionalUser.get();
 			if(user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Admin does not have permission to get instances");
+				throw new RuntimeException("Only Admin have permission to get instances");
 		}else
 			throw new RuntimeException("Can't find user with domain : " + userDomain + "and id : "+ userEmail);
 		
@@ -194,6 +198,29 @@ public class InstanceServiceJPA implements InstancesService {
 			throw new RuntimeException("Can't find user with space : " + adminDomain + 
 					" and id : " + adminEmail);
 
+	}
+
+	@Override
+	public void bindExistingInstanceToExistingChildInstance(InstanceId instanceIdBoundary, String user_domain,
+			String email, String instance_domain, String instanceId) {
+		InstanceEntity child =  instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+		InstanceEntity origion = instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
+		origion.addChildren(child);
+		child.addOrigin(origion);
+	}
+
+	@Override
+	public List<InstanceBoundary> getAllChildrensOfExistingInstance(InstanceId instanceIdBoundary, String user_domain,
+			String email, String instance_domain, String instanceId) {
+		InstanceEntity origion =  instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+		return origion.getchildrens().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<InstanceBoundary> getInstanceParents(InstanceId instanceIdBoundary, String user_domain, String email,
+			String instance_domain, String instanceId) {
+		InstanceEntity child =  instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+		return child.getOrigins().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 	
 	

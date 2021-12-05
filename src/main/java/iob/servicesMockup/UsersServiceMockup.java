@@ -18,7 +18,7 @@ import iob.data.UserRole;
 import iob.logic.UserNotFoundException;
 import iob.logic.UsersService;
 
-@Service
+//@Service
 public class UsersServiceMockup implements UsersService {
 
 	private String appName;
