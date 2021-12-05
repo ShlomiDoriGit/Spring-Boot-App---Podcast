@@ -1,5 +1,7 @@
 package iob;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import javax.annotation.PostConstruct;
 
 import org.junit.jupiter.api.AfterEach;
@@ -11,9 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ApplicationTests {
-	private int port;
 	private RestTemplate restTemplate;
 	private String url;
+	private int port;
 	
 	@LocalServerPort
 	public void setPort(int port) {
@@ -28,12 +30,12 @@ class ApplicationTests {
 	
 	@AfterEach
 	public void teardown() {
-		this.restTemplate
-			.delete(this.url);
+		// this.restTemplate.delete(this.url);
 	}
 	
 	@Test
-	public void contextLoads() {
-		
+	public void contextLoads() throws Exception{
+		String st = "x";
+		assertThat(st).isEqualTo("x");
 	}
 }
