@@ -1,5 +1,6 @@
 package iob.UsersRelatedAPI;
 
+
 /*
 {
 	"userId":{
@@ -64,4 +65,7 @@ public class UserBoundary {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
+	
+	
+
 }
