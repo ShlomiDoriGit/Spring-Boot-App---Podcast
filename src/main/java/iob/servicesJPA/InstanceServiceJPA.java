@@ -3,9 +3,7 @@ package iob.servicesJPA;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -23,7 +21,6 @@ import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
 import iob.logic.EnhancedInstancesService;
-import iob.logic.InstancesService;
 
 @Service
 public class InstanceServiceJPA implements EnhancedInstancesService{

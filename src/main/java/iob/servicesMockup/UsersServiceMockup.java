@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import iob.UsersRelatedAPI.UserBoundary;
 import iob.converters.UserConverter;
 import iob.data.UserEntity;
