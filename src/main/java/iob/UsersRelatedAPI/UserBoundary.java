@@ -1,7 +1,9 @@
 package iob.UsersRelatedAPI;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /*
@@ -18,6 +20,7 @@ import lombok.Setter;
 */
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class UserBoundary {
@@ -26,13 +29,6 @@ public class UserBoundary {
 	private String username;
 	private String avatar;
 
-	public UserBoundary(UserId userId, String role, String username, String avatar) {
-		this();
-		this.userId = userId;
-		this.role = role;
-		this.username = username;
-		this.avatar = avatar;
-	}
 
 	public UserBoundary(NewUser newUser) {
 		this(new UserId("demo", newUser.getEmail()), newUser.getRole(), newUser.getUsername(), newUser.getAvatar());

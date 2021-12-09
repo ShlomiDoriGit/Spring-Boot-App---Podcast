@@ -210,7 +210,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService{
 	public List<InstanceBoundary> getAllChildrensOfExistingInstance(InstanceId instanceIdBoundary, String user_domain,
 			String email, String instance_domain, String instanceId) {
 		InstanceEntity origion =  instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
-		return origion.getchildrens().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+		return origion.getChildrens().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
 	@Override

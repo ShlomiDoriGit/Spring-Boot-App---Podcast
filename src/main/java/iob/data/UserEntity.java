@@ -7,6 +7,11 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 /* 
  * USERS table:
  * USER_ID_DOMAIN     |	USER_ID_EMAIL	| ROLE	      |	USER_NAME 	| 	AVATAR	 |
@@ -16,73 +21,25 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "USERS")
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class UserEntity {
-
-	private String userIdDomain;
-	private String userIdEmail;
-	private UserRole role;
-	private String userName;
-	private String avatar;
-
-	public UserEntity() {
-		super();
-	}
-
+	
 	@Column(name="USER_ID_DOMAIN")
-	public String getUserIdDomain() {
-		return userIdDomain;
-	}
-
-
-	public void setUserIdDomain(String userIdDomain) {
-		this.userIdDomain = userIdDomain;
-	}
-
-	@Column(name="USER_ID_EMAIL")
+	private String userIdDomain;
+	
 	@Id
-	public String getUserIdEmail() {
-		return userIdEmail;
-	}
-
+	@Column(name="USER_ID_EMAIL")
+	private String userIdEmail;
 	
-	public void setUserIdEmail(String userIdEmail) {
-		this.userIdEmail = userIdEmail;
-	}
-
 	@Enumerated(EnumType.STRING) // EnumType.ORDINAL
-	public UserRole getRole() {
-		return role;
-	}
-
-	
-	public void setRole(UserRole role) {
-		this.role = role;
-	}
+	private UserRole role;
 	
 	@Column(name="USER_NAME")
-	public String getUserName() {
-		return userName;
-	}
-
+	private String userName;
 	
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
 	@Column(name="USER_AVATAR")
-	public String getAvatar() {
-		return avatar;
-	}
-
-	
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
-	@Override
-	public String toString() {
-		return "UserEntity [userIdDomain=" + userIdDomain + ", userIdEmail=" + userIdEmail + ", role=" + role
-				+ ", username=" + userName + ", avatar=" + avatar + "]";
-	}
-
+	private String avatar;
 }

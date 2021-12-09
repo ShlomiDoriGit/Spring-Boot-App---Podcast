@@ -1,24 +1,15 @@
 package iob.ActivitiesAPI;
 
 import iob.UsersRelatedAPI.UserId;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class InvokeBy {
 	private UserId userId;
-
-	public InvokeBy() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public InvokeBy(UserId userId) {
-		this();
-		this.userId = userId;
-	}
-
-	public UserId getUserId() {
-		return userId;
-	}
-
-	public void setUserId(UserId userId) {
-		this.userId = userId;
-	}
 }

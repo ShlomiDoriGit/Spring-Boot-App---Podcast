@@ -1,5 +1,6 @@
 package iob.UsersRelatedAPI;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,15 +13,10 @@ import lombok.Setter;
  */
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class UserId {
 	private String domain;
 	private String email;
-
-	public UserId(String domain, String email) {
-		this();
-		this.domain = domain;
-		this.email = email;
-	}
 }

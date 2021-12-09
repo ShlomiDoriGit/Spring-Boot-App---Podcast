@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import iob.converters.IobMapToJsonConverter;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,6 +39,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ActivityEntity {
+	
 	@Id
 	@Column(name = "ACTIVITY_ID")
 	private String activityId;
