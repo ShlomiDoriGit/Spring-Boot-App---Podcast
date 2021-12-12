@@ -3,7 +3,6 @@ package iob.data;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,10 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import iob.converters.IobMapToJsonConverter;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 /*
  * INSTANCES
@@ -31,10 +27,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(name = "INSTANCES")
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class InstanceEntity {
 	
 	@Column(name = "INSTANCE_DOMAIN")
@@ -89,23 +82,5 @@ public class InstanceEntity {
 	
 	public void addChildren(InstanceEntity children) {
 		this.childrens.add(children);
-	}
-	
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(instanceId);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		InstanceEntity other = (InstanceEntity) obj;
-		return Objects.equals(instanceId, other.instanceId);
 	}
 }

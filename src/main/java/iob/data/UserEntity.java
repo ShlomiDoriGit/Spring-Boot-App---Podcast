@@ -8,10 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 /* 
  * USERS table:
  * USER_ID_DOMAIN     |	USER_ID_EMAIL	| ROLE	      |	USER_NAME 	| 	AVATAR	 |
@@ -21,10 +18,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(name = "USERS")
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class UserEntity {
 	
 	@Column(name="USER_ID_DOMAIN")
