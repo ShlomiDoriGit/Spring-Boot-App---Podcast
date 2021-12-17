@@ -16,4 +16,6 @@ public interface EnhancedInstancesService extends InstancesService {
 	public List<InstanceBoundary> getInstanceParents(InstanceId instanceIdBoundary, String user_domain, String email,
 			String instance_domain, String instanceId);
 
+	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int page, int size);
+
 }

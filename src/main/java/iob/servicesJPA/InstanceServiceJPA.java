@@ -9,6 +9,10 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +27,7 @@ import iob.data.UserRole;
 import iob.logic.EnhancedInstancesService;
 
 @Service
-public class InstanceServiceJPA implements EnhancedInstancesService{
+public class InstanceServiceJPA implements EnhancedInstancesService {
 
 	private String appName;
 	private UserDao userDao;
@@ -139,69 +143,73 @@ public class InstanceServiceJPA implements EnhancedInstancesService{
 
 	@Override
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail) {
-		Iterable<InstanceEntity> allEntities = this.instanceDao.findAll();
-
-		return StreamSupport.stream(allEntities.spliterator(), false) // get stream from iterable
-				.map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+		throw new RuntimeException("Uninmplemented deprecated operation");
 	}
 
-	
-	
-	
-	
+	@Override
+	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int page, int size) {
+		Direction direction = Direction.ASC;
+		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "instanceId");
+		Page<InstanceEntity> resultPage = this.instanceDao.findAll(pageable);
+
+		Iterable<InstanceEntity> allEntities = this.instanceDao.findAll();
+
+		return resultPage.stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+	}
+
 	@Override
 	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String InstanceDomain,
 			String instanceId) {
-		
+
 		Optional<UserEntity> optionalUser = this.userDao.findById(userDomain + "@@" + userEmail);
 		UserEntity user;
-		if(optionalUser.isPresent()) {
+		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
-			if(user.getRole().equals(UserRole.ADMIN))
+			if (user.getRole().equals(UserRole.ADMIN))
 				throw new RuntimeException("Only Admin have permission to get instances");
-		}else
-			throw new RuntimeException("Can't find user with domain : " + userDomain + "and id : "+ userEmail);
-		
-		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(InstanceDomain+"@@"+instanceId);
-		if(optionalEntity.isPresent()) {
+		} else
+			throw new RuntimeException("Can't find user with domain : " + userDomain + "and id : " + userEmail);
+
+		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(InstanceDomain + "@@" + instanceId);
+		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
-		
-			if(entity.getActive())
+
+			if (entity.getActive())
 				return this.instanceConverter.convertToBoundary(entity);
-			
-			else if(user.getRole().equals(UserRole.MANAGER))
-				return  this.instanceConverter.convertToBoundary(entity);
+
+			else if (user.getRole().equals(UserRole.MANAGER))
+				return this.instanceConverter.convertToBoundary(entity);
 			else
 				throw new RuntimeException("Could not find instance " + instanceId);
-			
-		}else {
+
+		} else {
 			throw new RuntimeException("Could not find instance " + instanceId);// NullPointerException
 		}
-			
+
 	}
-	
-	
+
 	@Override
 	public void deleteAllInstances(String adminDomain, String adminEmail) {
-		
+
 		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
-		if(optionalUser.isPresent()) {
+		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
-			if(admin.getRole().equals(UserRole.ADMIN))
+			if (admin.getRole().equals(UserRole.ADMIN))
 				this.instanceDao.deleteAll();
 			else
 				throw new RuntimeException("Only user with ADMIN role can delete all items");
-		}else
-			throw new RuntimeException("Can't find user with space : " + adminDomain + 
-					" and id : " + adminEmail);
+		} else
+			throw new RuntimeException("Can't find user with space : " + adminDomain + " and id : " + adminEmail);
 
 	}
 
 	@Override
 	public void bindExistingInstanceToExistingChildInstance(InstanceId instanceIdBoundary, String user_domain,
 			String email, String instance_domain, String instanceId) {
-		InstanceEntity child =  instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
-		InstanceEntity origion = instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
+		InstanceEntity child = instanceConverter.convertToEntity(
+				getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+		InstanceEntity origion = instanceConverter
+				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
 		origion.addChildren(child);
 		child.addOrigin(origion);
 	}
@@ -209,17 +217,18 @@ public class InstanceServiceJPA implements EnhancedInstancesService{
 	@Override
 	public List<InstanceBoundary> getAllChildrensOfExistingInstance(InstanceId instanceIdBoundary, String user_domain,
 			String email, String instance_domain, String instanceId) {
-		InstanceEntity origion =  instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
-		return origion.getChildrens().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+		InstanceEntity origion = instanceConverter.convertToEntity(
+				getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+		return origion.getChildrens().stream().map(this.instanceConverter::convertToBoundary)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<InstanceBoundary> getInstanceParents(InstanceId instanceIdBoundary, String user_domain, String email,
 			String instance_domain, String instanceId) {
-		InstanceEntity child =  instanceConverter.convertToEntity(getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+		InstanceEntity child = instanceConverter.convertToEntity(
+				getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
 		return child.getOrigins().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
-	
-	
 
 }

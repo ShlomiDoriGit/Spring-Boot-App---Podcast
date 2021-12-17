@@ -11,6 +11,10 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +28,10 @@ import iob.data.ActivityEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
 import iob.logic.ActivitiesService;
+import iob.logic.EnhancedActivitiesService;
 
 @Service
-public class ActivityServiceJPA implements ActivitiesService {
+public class ActivityServiceJPA implements EnhancedActivitiesService {
 
 	private UserDao userDao;
 	private InstanceDao instanceDao;
@@ -98,6 +103,14 @@ public class ActivityServiceJPA implements ActivitiesService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail) {
+		throw new RuntimeException("Uninmplemented deprecated operation");
+	}
+
+	@Override
+	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail, int page, int size) {
+		Direction direction = Direction.ASC;
+		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "activityId");
+		Page<ActivityEntity> resultPage = this.activityDao.findAll(pageable);
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
 		if (optionalUser.isPresent()) {
@@ -105,8 +118,8 @@ public class ActivityServiceJPA implements ActivitiesService {
 			if (admin.getRole().equals(UserRole.ADMIN)) {
 				Iterable<ActivityEntity> allEntities = this.activityDao.findAll();
 
-				return StreamSupport.stream(allEntities.spliterator(), false) // get stream from iterable
-						.map(this.activityConverter::convertToBoundary).collect(Collectors.toList());
+				return resultPage.stream().map(this.activityConverter::convertToBoundary).collect(Collectors.toList());
+
 			}
 
 			else

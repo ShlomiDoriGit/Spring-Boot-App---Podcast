@@ -9,6 +9,10 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +21,11 @@ import iob.UsersRelatedAPI.UserBoundary;
 import iob.converters.UserConverter;
 import iob.data.UserEntity;
 import iob.data.UserRole;
+import iob.logic.EnhancedUsersService;
 import iob.logic.UsersService;
 
 @Service
-public class UserServiceJpa implements UsersService {
+public class UserServiceJpa implements EnhancedUsersService {
 	private UserDao userDao;
 	private String appName;
 	private UserConverter userConverter;
@@ -62,6 +67,15 @@ public class UserServiceJpa implements UsersService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminDomain, String adminEmail) {
+		throw new RuntimeException("Uninmplemented deprecated operation");
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserBoundary> getAllUsers(String adminDomain, String adminEmail, int page, int size) {
+		Direction direction = Direction.ASC;
+		Pageable pageable = PageRequest.of(page, size, direction, "userName", "userIdEmail");
+		Page<UserEntity> resultPage = this.userDao.findAll(pageable);
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
 
@@ -71,8 +85,7 @@ public class UserServiceJpa implements UsersService {
 //				Iterable<UserEntity>  allEntities = this.userDao
 //						.findAll();
 
-				return StreamSupport.stream(this.userDao.findAll().spliterator(), false) // Stream<UserEntity>
-						.map(this.userConverter::convertToBoundary) // Stream<UserBoundary>
+				return resultPage.stream().map(this.userConverter::convertToBoundary) // Stream<UserBoundary>
 						.collect(Collectors.toList()); // List<UserBoundary>
 
 			} else
