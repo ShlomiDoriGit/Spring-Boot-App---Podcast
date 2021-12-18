@@ -150,6 +150,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int page, int size) {
 		Direction direction = Direction.ASC;
 		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "instanceId");
@@ -161,6 +162,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String InstanceDomain,
 			String instanceId) {
 
@@ -192,6 +194,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteAllInstances(String adminDomain, String adminEmail) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
@@ -207,6 +210,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	}
 
 	@Override
+	@Transactional
 	public void bindExistingInstanceToExistingChildInstance(InstanceId instanceIdBoundary, String user_domain,
 			String email, String instance_domain, String instanceId) {
 		InstanceEntity child = instanceConverter.convertToEntity(
@@ -218,6 +222,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getAllChildrensOfExistingInstance(InstanceId instanceIdBoundary, String user_domain,
 			String email, String instance_domain, String instanceId) {
 		InstanceEntity origion = instanceConverter.convertToEntity(
@@ -227,6 +232,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getInstanceParents(InstanceId instanceIdBoundary, String user_domain, String email,
 			String instance_domain, String instanceId) {
 		InstanceEntity child = instanceConverter.convertToEntity(

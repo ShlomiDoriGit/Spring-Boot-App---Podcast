@@ -107,6 +107,7 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail, int page, int size) {
 		Direction direction = Direction.ASC;
 		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "activityId");
@@ -129,6 +130,7 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteAllActivities(String adminDomain, String adminEmail) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);

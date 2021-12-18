@@ -144,6 +144,7 @@ public class UserServiceJpa implements EnhancedUsersService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteAllUsers(String adminDomain, String adminEmail) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
