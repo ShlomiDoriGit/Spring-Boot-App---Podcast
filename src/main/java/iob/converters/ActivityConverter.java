@@ -21,8 +21,7 @@ public class ActivityConverter {
 	public ActivityEntity convertToEntity(ActivityBoundary boundary) {
 		ActivityEntity entity = new ActivityEntity();
 		// Default values
-//		entity.setActivityDomain("2022a.demo");
-//		entity.setActivityId("112");
+		entity.setActivityId(new ActivityId());
 		entity.getActivityId().setDomain("2022a.demo");
 		entity.getActivityId().setId("112");
 		entity.setType("demoActivityType");

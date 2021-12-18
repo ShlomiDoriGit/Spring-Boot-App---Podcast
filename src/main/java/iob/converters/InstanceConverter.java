@@ -26,8 +26,7 @@ public class InstanceConverter {
 	public InstanceEntity convertToEntity(InstanceBoundary boundary) {
 		InstanceEntity entity = new InstanceEntity();
 		// default
-//		entity.setInstanceDomain(appName);
-//		entity.setInstanceId("352");
+		entity.setInsanceId(new InstanceId());
 		entity.getInsanceId().setDomain(appName);
 		entity.getInsanceId().setId("352");
 		entity.setType("dummyInstanceType");

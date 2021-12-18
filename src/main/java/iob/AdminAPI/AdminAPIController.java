@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import iob.ActivitiesAPI.ActivityBoundary;
 import iob.UsersRelatedAPI.UserBoundary;
-import iob.logic.ActivitiesService;
 import iob.logic.EnhancedActivitiesService;
 import iob.logic.EnhancedUsersService;
 import iob.logic.InstancesService;
-import iob.logic.UsersService;
 
 @RestController
 public class AdminAPIController {

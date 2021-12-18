@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +19,7 @@ import iob.Dao.InstanceDao;
 import iob.Dao.UserDao;
 import iob.InstancesAPI.InstanceBoundary;
 import iob.InstancesAPI.InstanceId;
+import iob.UsersRelatedAPI.UserId;
 import iob.converters.InstanceConverter;
 import iob.data.InstanceEntity;
 import iob.data.UserEntity;
@@ -55,7 +55,8 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	@Transactional
 	public InstanceBoundary createInstance(String userDomain, String userEmail, InstanceBoundary instance) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(userDomain + "@@" + userEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
+				//this.userDao.findById(userDomain + "@@" + userEmail);
 		if (optionalUser.isPresent())
 			if (!(optionalUser.get().getRole().equals(UserRole.MANAGER)))
 				throw new RuntimeException("Only a manager can create instance ");// NullPointerException
@@ -99,12 +100,13 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 			String InstanceId, InstanceBoundary update) {
 
 		// Permission check
-		Optional<UserEntity> optionalUser = this.userDao.findById(userDomain + "@@" + userEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail)); 
+				//this.userDao.findById(userDomain + "@@" + userEmail);
 		if (optionalUser.isPresent())
 			if (!(optionalUser.get().getRole().equals(UserRole.MANAGER)))
 				throw new RuntimeException("Only a manager can update item ");// NullPointerException
 
-		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(instanceDomain + "@@" + InstanceId);
+		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(instanceDomain, InstanceId));
 		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
 			if (userDomain != null && !userDomain.equals("")) {
@@ -156,7 +158,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "instanceId");
 		Page<InstanceEntity> resultPage = this.instanceDao.findAll(pageable);
 
-		Iterable<InstanceEntity> allEntities = this.instanceDao.findAll();
+		//Iterable<InstanceEntity> allEntities = this.instanceDao.findAll();
 
 		return resultPage.stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
@@ -166,7 +168,8 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String InstanceDomain,
 			String instanceId) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(userDomain + "@@" + userEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
+				//this.userDao.findById(userDomain + "@@" + userEmail);
 		UserEntity user;
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
@@ -175,7 +178,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		} else
 			throw new RuntimeException("Can't find user with domain : " + userDomain + "and id : " + userEmail);
 
-		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(InstanceDomain + "@@" + instanceId);
+		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(InstanceDomain, instanceId));
 		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
 
@@ -197,7 +200,8 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	@Transactional
 	public void deleteAllInstances(String adminDomain, String adminEmail) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail)); 
+				//this.userDao.findById(adminDomain + "@@" + adminEmail);
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN))

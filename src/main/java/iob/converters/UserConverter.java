@@ -13,9 +13,8 @@ public class UserConverter {
 
 	public UserEntity convertToEntity(UserBoundary boundary) {
 		UserEntity entity = new UserEntity();
+		entity.setUserId(new UserId());
 		// Default
-//		entity.setUserIdDomain("2022a.demo");
-//		entity.setUserIdEmail("user@demo.com");
 		entity.getUserId().setDomain("2022a.demo");
 		entity.getUserId().setEmail("user@demo.com");
 		entity.setRole(UserRole.PLAYER);

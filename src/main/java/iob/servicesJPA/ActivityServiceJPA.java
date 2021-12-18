@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,11 +22,11 @@ import iob.ActivitiesAPI.ActivityId;
 import iob.Dao.ActivityDao;
 import iob.Dao.InstanceDao;
 import iob.Dao.UserDao;
+import iob.UsersRelatedAPI.UserId;
 import iob.converters.ActivityConverter;
 import iob.data.ActivityEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
-import iob.logic.ActivitiesService;
 import iob.logic.EnhancedActivitiesService;
 
 @Service
@@ -60,8 +59,8 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 	@Transactional
 	public Object invokeActivity(ActivityBoundary activity) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(activity.getInvokedBy().getUserId().getDomain() + "@@"
-				+ activity.getInvokedBy().getUserId().getEmail());
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId( activity.getInvokedBy().getUserId().getDomain() , activity.getInvokedBy().getUserId().getEmail()));
+				//activity.getInvokedBy().getUserId().getDomain() + "@@" + activity.getInvokedBy().getUserId().getEmail());
 
 		if (optionalUser.isPresent()) {
 			if (optionalUser.get().getRole().equals(UserRole.PLAYER) == false)
@@ -113,11 +112,12 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "activityId");
 		Page<ActivityEntity> resultPage = this.activityDao.findAll(pageable);
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail)); 
+				//this.userDao.findById(adminDomain + "@@" + adminEmail);
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN)) {
-				Iterable<ActivityEntity> allEntities = this.activityDao.findAll();
+				//Iterable<ActivityEntity> allEntities = this.activityDao.findAll();
 
 				return resultPage.stream().map(this.activityConverter::convertToBoundary).collect(Collectors.toList());
 
@@ -133,7 +133,8 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 	@Transactional
 	public void deleteAllActivities(String adminDomain, String adminEmail) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail));
+				//adminDomain + "@@" + adminEmail);
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN))

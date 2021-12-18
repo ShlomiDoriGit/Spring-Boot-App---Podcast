@@ -3,7 +3,6 @@ package iob.logic;
 import java.util.List;
 
 import iob.InstancesAPI.InstanceBoundary;
-import iob.InstancesAPI.InstanceId;
 
 public interface InstancesService {
 

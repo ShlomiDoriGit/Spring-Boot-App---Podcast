@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import iob.Dao.UserDao;
 import iob.UsersRelatedAPI.UserBoundary;
+import iob.UsersRelatedAPI.UserId;
 import iob.converters.UserConverter;
 import iob.data.UserEntity;
 import iob.data.UserRole;
 import iob.logic.EnhancedUsersService;
-import iob.logic.UsersService;
 
 @Service
 public class UserServiceJpa implements EnhancedUsersService {
@@ -77,7 +76,7 @@ public class UserServiceJpa implements EnhancedUsersService {
 		Pageable pageable = PageRequest.of(page, size, direction, "userName", "userIdEmail");
 		Page<UserEntity> resultPage = this.userDao.findAll(pageable);
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail));
 
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
@@ -99,7 +98,7 @@ public class UserServiceJpa implements EnhancedUsersService {
 	@Override
 	@Transactional
 	public UserBoundary updateUser(String userDomain, String userEmail, UserBoundary update) {
-		Optional<UserEntity> optionalUser = this.userDao.findById(userDomain + "@@" + userEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain ,userEmail));
 		if (optionalUser.isPresent()) {
 
 			UserEntity entity = optionalUser.get();
@@ -131,9 +130,9 @@ public class UserServiceJpa implements EnhancedUsersService {
 	@Transactional(readOnly = true)
 	public UserBoundary login(String userDomain, String userEmail) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(userDomain + "@@" + userEmail);
-
-		if (optionalUser.isPresent()) {
+//		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail).toString());
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
+		if (optionalUser != null) {
 			UserEntity entity = optionalUser.get();
 			UserBoundary boundary = userConverter.convertToBoundary(entity);
 			return boundary;
@@ -147,7 +146,7 @@ public class UserServiceJpa implements EnhancedUsersService {
 	@Transactional
 	public void deleteAllUsers(String adminDomain, String adminEmail) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(adminDomain + "@@" + adminEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain ,adminEmail));
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN))

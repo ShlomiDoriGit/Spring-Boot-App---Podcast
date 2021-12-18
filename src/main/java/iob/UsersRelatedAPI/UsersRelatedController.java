@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import iob.logic.UsersService;
@@ -32,7 +33,9 @@ public class UsersRelatedController {
 			        method = RequestMethod.GET,
 			        produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary loginValidUser(@PathVariable("userDomain") String domain,
-			@PathVariable("userEmail") String email) {
+			@PathVariable("userEmail") String email,
+			@RequestParam(name="size", required = false, defaultValue = "10") int size, 
+			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
 		return usersService.login(domain, email);
 	}
 
