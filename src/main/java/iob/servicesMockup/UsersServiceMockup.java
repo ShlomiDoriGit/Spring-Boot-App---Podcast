@@ -54,7 +54,8 @@ public class UsersServiceMockup implements UsersService {
 
 		user.getUserId().setDomain(appName);
 		UserEntity entity = this.userConverter.convertToEntity(user);
-		this.users.put(entity.getUserIdDomain() + "@@" + entity.getUserIdEmail(), entity);
+//		this.users.put(entity.getUserIdDomain() + "@@" + entity.getUserIdEmail(), entity);
+		this.users.put(entity.getUserId().getDomain() + "@@" + entity.getUserId().getEmail(), entity);
 		// TODO check this line ^
 		return this.userConverter.convertToBoundary(entity);
 	}

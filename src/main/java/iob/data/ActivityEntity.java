@@ -1,5 +1,6 @@
 package iob.data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -16,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import iob.ActivitiesAPI.ActivityId;
 import iob.converters.IobMapToJsonConverter;
 import lombok.Data;
 
@@ -24,20 +28,16 @@ import lombok.Data;
  * ------------------------------------------------------------------------------------------------------------------------ -----------------------------------------------------------
  * ACTIVITY_ID  | ACTIVITY_DOMAIN| TYPE         | ACTIVITY_INSTANCE_DOMAIN| ACTIVITY_INSTANCE_ID | MESSAGE_CREATION_TOMESTAMP  | INVOKE_BY_USER_EMAIL |INVOKE_BY_USER_DOMAIN |ACTIVITY_ATTRIBUTES |ORIGIN_ID   |
  * VARCHAR(255) | VARCHAR(255)   | VARCHAR(255) | VARCHAR(255)            | VARCHAR(255)         |  TIMESTAMP                  | VARCHAR(255)         |VARCHAR(255)			 |CLOB                |VARCHAR(255)|
- * <PK>         |                |              |                         |                      |                             |                      |                      |                    |<FK>        |
+ * <PK>         | <PK>           |              |                         |                      |                             |                      |                      |                    |<FK>        |
  */
 
 @Entity
 @Table(name = "ACTIVITIES")
 @Data
-public class ActivityEntity {
+public class ActivityEntity  {
 
-	@Id
-	@Column(name = "ACTIVITY_ID")
-	private String activityId;
-	
-	@Column(name = "ACTIVITY_DOMAIN")
-	private String activityDomain;
+	@EmbeddedId
+	private ActivityId activityId;
 	
 	@Column(name = "TYPE")
 	private String type;

@@ -26,8 +26,10 @@ public class InstanceConverter {
 	public InstanceEntity convertToEntity(InstanceBoundary boundary) {
 		InstanceEntity entity = new InstanceEntity();
 		// default
-		entity.setInstanceDomain(appName);
-		entity.setInstanceId("352");
+//		entity.setInstanceDomain(appName);
+//		entity.setInstanceId("352");
+		entity.getInsanceId().setDomain(appName);
+		entity.getInsanceId().setId("352");
 		entity.setType("dummyInstanceType");
 		entity.setCreatedByUserDomain(appName);
 		entity.setCreatedByUserEmail("user2@@demo.com");
@@ -42,10 +44,10 @@ public class InstanceConverter {
 		entity.setInstanceAttributes(m);
 		if (boundary.getInstanceId() != null) {
 			if (boundary.getInstanceId().getDomain() != null) {
-				entity.setInstanceDomain(appName);
+				entity.getInsanceId().setDomain(appName);
 			}
 			if (boundary.getInstanceId().getId() != null) {
-				entity.setInstanceId(boundary.getInstanceId().getId());
+				entity.getInsanceId().setId(boundary.getInstanceId().getId());
 			}
 
 		}
@@ -85,7 +87,7 @@ public class InstanceConverter {
 
 	public InstanceBoundary convertToBoundary(InstanceEntity entity) {
 		InstanceBoundary boundary = new InstanceBoundary();
-		boundary.setInstanceId(new InstanceId(this.appName, entity.getInstanceId()));
+		boundary.setInstanceId(new InstanceId(this.appName, entity.getInsanceId().getId()));
 		boundary.setType(entity.getType());
 		boundary.setName(entity.getName());
 		boundary.setActive(entity.getActive());

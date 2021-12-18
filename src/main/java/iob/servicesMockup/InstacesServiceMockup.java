@@ -64,11 +64,14 @@ public class InstacesServiceMockup implements InstancesService {
 			entity.setCreatedByUserEmail(userEmail);
 		}
 		// Instance
-		entity.setInstanceDomain(appName);
-		entity.setInstanceId(UUID.randomUUID().toString());
+//		entity.setInstanceDomain(appName);
+		entity.getInsanceId().setDomain(appName);
+		//entity.setInstanceId(UUID.randomUUID().toString());
+		entity.getInsanceId().setId(UUID.randomUUID().toString());
+
 		// Date
 		entity.setCreatedTimestamp(new Date());
-		this.instances.put(entity.getInstanceDomain() + "@@" + entity.getInstanceId(), entity);
+		this.instances.put(entity.getInsanceId().getDomain() + "@@" + entity.getInsanceId().getId(), entity);
 		return this.instanceConverter.convertToBoundary(entity);
 	}
 

@@ -1,5 +1,10 @@
 package iob.UsersRelatedAPI;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +16,16 @@ import lombok.Setter;
 	"email":"user@demo.com"
 }
  */
-
+@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserId {
+public class UserId implements Serializable{
+
+	@Column(name="USER_ID_DOMAIN")
 	private String domain;
+	
+	@Column(name="USER_ID_EMAIL")
 	private String email;
 }

@@ -81,8 +81,11 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 			entity.setCreatedByUserEmail(userEmail);
 		}
 		// Instance
-		entity.setInstanceDomain(appName);
-		entity.setInstanceId(UUID.randomUUID().toString());
+	//	entity.setInstanceDomain(appName);
+		entity.getInsanceId().setDomain(appName);
+//		entity.setInstanceId(UUID.randomUUID().toString());
+		entity.getInsanceId().setId(UUID.randomUUID().toString());
+		
 		// Date
 		entity.setCreatedTimestamp(new Date());
 		entity = this.instanceDao.save(entity);

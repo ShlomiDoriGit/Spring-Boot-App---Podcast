@@ -48,9 +48,10 @@ public class ActivitiesServiceMockup implements ActivitiesService {
 		ActivityEntity entity = this.activityConverter.convertToEntity(activity);
 		//entity.setActivityId(UUID.randomUUID().toString());
 		
-		entity.setActivityDomain(appName);
+		//entity.setActivityDomain(appName);
+		entity.getActivityId().setDomain(appName);
 		entity.setCreatedTimestamp(new Date());
-		this.activities.put(entity.getActivityDomain()+"@@"+entity.getActivityId(), entity);
+		this.activities.put(entity.getActivityId().getDomain()+"@@"+entity.getActivityId().getId(), entity);
 		return this.activityConverter.convertToBoundary(entity);
 	}
 

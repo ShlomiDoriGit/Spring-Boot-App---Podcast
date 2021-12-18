@@ -21,8 +21,10 @@ public class ActivityConverter {
 	public ActivityEntity convertToEntity(ActivityBoundary boundary) {
 		ActivityEntity entity = new ActivityEntity();
 		// Default values
-		entity.setActivityDomain("2022a.demo");
-		entity.setActivityId("112");
+//		entity.setActivityDomain("2022a.demo");
+//		entity.setActivityId("112");
+		entity.getActivityId().setDomain("2022a.demo");
+		entity.getActivityId().setId("112");
 		entity.setType("demoActivityType");
 		entity.setActivityInstanceDomain("2022a.demo");
 		entity.setActivityInstanceId("352");
@@ -38,10 +40,14 @@ public class ActivityConverter {
 		
 		if (boundary.getActivityId() != null) {
 			if (boundary.getActivityId().getId() != null) {
-				entity.setActivityId(boundary.getActivityId().getId());
+//				entity.setActivityId(boundary.getActivityId().getId());
+				entity.getActivityId().setId(boundary.getActivityId().getId());
+
 			}
 			if (boundary.getActivityId().getDomain() != null) {
-				entity.setActivityDomain(boundary.getActivityId().getDomain());
+				//entity.setActivityDomain(boundary.getActivityId().getDomain());
+				entity.getActivityId().setDomain(boundary.getActivityId().getDomain());
+
 			}
 		}
 		if (boundary.getType() != null) {
@@ -77,11 +83,13 @@ public class ActivityConverter {
 	public ActivityBoundary convertToBoundary(ActivityEntity entity) {
 		ActivityBoundary boundary = new ActivityBoundary();
 
-		boundary.setActivityId(new ActivityId(entity.getActivityDomain(), entity.getActivityId()));
+//		boundary.setActivityId(new ActivityId(entity.getActivityDomain(), entity.getActivityId()));
+		boundary.setActivityId(new ActivityId(entity.getActivityId().getDomain(), entity.getActivityId().getId()));
 		boundary.setType(entity.getType());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		boundary.setInstance(
-				new ActivityInstance(new InstanceId(entity.getActivityInstanceDomain(), entity.getActivityId())));
+//				new ActivityInstance(new InstanceId(entity.getActivityInstanceDomain(), entity.getActivityId())));
+				new ActivityInstance(new InstanceId(entity.getActivityId().getDomain(), entity.getActivityId().getId())));
 		boundary.setInvokedBy(new InvokeBy(new UserId(entity.getInvokeByUserDomain(), entity.getInvokeByUserEmail())));
 		boundary.setActivityAttributes(entity.getActivityAttributes());
 		return boundary;
