@@ -94,6 +94,17 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	@Transactional
 	public InstanceBoundary updateInstance(String userDomain, String userEmail, String instanceDomain,
 			String InstanceId, InstanceBoundary update) {
+		UserEntity user;
+		// Find user
+		Optional<UserEntity> optinalUser = this.userDao.findById(new UserId(userDomain, userEmail));
+		if (optinalUser.isPresent()) {
+			user = optinalUser.get();
+		} else {
+			throw new RuntimeException("No user found");
+		}
+		if (user.getRole() != UserRole.MANAGER) {
+			throw new RuntimeException("Only MANAGER can update Instances");
+		}
 		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(instanceDomain, InstanceId));
 		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
@@ -162,20 +173,14 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 			user = optionalUser.get();
 		} else
 			throw new RuntimeException("Cannot find the user");
-		
+
 		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(InstanceDomain, instanceId));
 		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
+			if (user.getRole() == UserRole.PLAYER && entity.getActive() == false) {
+				throw new RuntimeException("Instance not found " + instanceId);
+			}
 			return this.instanceConverter.convertToBoundary(entity);
-			
-			//TODO check requirements for returning specific instance
-//			if (entity.getActive())
-//				return this.instanceConverter.convertToBoundary(entity);
-//			else if (user.getRole().equals(UserRole.MANAGER))
-//				return this.instanceConverter.convertToBoundary(entity);
-//			else
-//				throw new RuntimeException("Could not find instance " + instanceId);
-
 		} else {
 			throw new RuntimeException("Could not find instance " + instanceId);// NullPointerException
 		}
