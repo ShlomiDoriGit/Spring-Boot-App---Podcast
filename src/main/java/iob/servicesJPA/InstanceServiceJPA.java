@@ -56,41 +56,37 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	public InstanceBoundary createInstance(String userDomain, String userEmail, InstanceBoundary instance) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
-				//this.userDao.findById(userDomain + "@@" + userEmail);
-		if (optionalUser.isPresent())
-			if (!(optionalUser.get().getRole().equals(UserRole.MANAGER)))
-				throw new RuntimeException("Only a manager can create instance ");// NullPointerException
+		if (optionalUser.isPresent()) {
 
-		InstanceEntity entity = this.instanceConverter.convertToEntity(instance);
+			InstanceEntity entity = this.instanceConverter.convertToEntity(instance);
 
-		if (userDomain == null || userDomain == "") {
-			throw new RuntimeException("Could not create an instance withot user's domail");
-		}
-		if (userEmail == null || userEmail == "") {
-			throw new RuntimeException("Could not create an instance without user's email");
-		}
-		if (instance == null)
-			throw new RuntimeException("Could not create an instance without instance boundary");
+			if (userDomain == null || userDomain == "") {
+				throw new RuntimeException("Could not create an instance withot user's domail");
+			}
+			if (userEmail == null || userEmail == "") {
+				throw new RuntimeException("Could not create an instance without user's email");
+			}
+			if (instance == null)
+				throw new RuntimeException("Could not create an instance without instance boundary");
 
-		// User
-		if (instance.getCreatedBy().getUserId().getDomain() == null
-				|| instance.getCreatedBy().getUserId().getDomain().equals("")) {
-			entity.setCreatedByUserDomain(appName);
+			// User
+			if (instance.getCreatedBy().getUserId().getDomain() == null
+					|| instance.getCreatedBy().getUserId().getDomain().equals("")) {
+				entity.setCreatedByUserDomain(appName);
+			}
+			if (instance.getCreatedBy().getUserId().getEmail() == null
+					|| instance.getCreatedBy().getUserId().getEmail().equals("")) {
+				entity.setCreatedByUserEmail(userEmail);
+			}
+			// Instance
+			entity.getInsanceId().setDomain(appName);
+			entity.getInsanceId().setId(UUID.randomUUID().toString());
+			// Date
+			entity.setCreatedTimestamp(new Date());
+			entity = this.instanceDao.save(entity);
+			return this.instanceConverter.convertToBoundary(entity);
 		}
-		if (instance.getCreatedBy().getUserId().getEmail() == null
-				|| instance.getCreatedBy().getUserId().getEmail().equals("")) {
-			entity.setCreatedByUserEmail(userEmail);
-		}
-		// Instance
-	//	entity.setInstanceDomain(appName);
-		entity.getInsanceId().setDomain(appName);
-//		entity.setInstanceId(UUID.randomUUID().toString());
-		entity.getInsanceId().setId(UUID.randomUUID().toString());
-		
-		// Date
-		entity.setCreatedTimestamp(new Date());
-		entity = this.instanceDao.save(entity);
-		return this.instanceConverter.convertToBoundary(entity);
+		throw new RuntimeException("No user found");
 
 	}
 
@@ -98,14 +94,6 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	@Transactional
 	public InstanceBoundary updateInstance(String userDomain, String userEmail, String instanceDomain,
 			String InstanceId, InstanceBoundary update) {
-
-		// Permission check
-		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail)); 
-				//this.userDao.findById(userDomain + "@@" + userEmail);
-		if (optionalUser.isPresent())
-			if (!(optionalUser.get().getRole().equals(UserRole.MANAGER)))
-				throw new RuntimeException("Only a manager can update item ");// NullPointerException
-
 		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(instanceDomain, InstanceId));
 		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
@@ -158,7 +146,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "instanceId");
 		Page<InstanceEntity> resultPage = this.instanceDao.findAll(pageable);
 
-		//Iterable<InstanceEntity> allEntities = this.instanceDao.findAll();
+		// Iterable<InstanceEntity> allEntities = this.instanceDao.findAll();
 
 		return resultPage.stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
@@ -169,26 +157,24 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 			String instanceId) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
-				//this.userDao.findById(userDomain + "@@" + userEmail);
 		UserEntity user;
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
-			if (user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Only Admin have permission to get instances");
 		} else
-			throw new RuntimeException("Can't find user with domain : " + userDomain + "and id : " + userEmail);
-
+			throw new RuntimeException("Cannot find the user");
+		
 		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(InstanceDomain, instanceId));
 		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
-
-			if (entity.getActive())
-				return this.instanceConverter.convertToBoundary(entity);
-
-			else if (user.getRole().equals(UserRole.MANAGER))
-				return this.instanceConverter.convertToBoundary(entity);
-			else
-				throw new RuntimeException("Could not find instance " + instanceId);
+			return this.instanceConverter.convertToBoundary(entity);
+			
+			//TODO check requirements for returning specific instance
+//			if (entity.getActive())
+//				return this.instanceConverter.convertToBoundary(entity);
+//			else if (user.getRole().equals(UserRole.MANAGER))
+//				return this.instanceConverter.convertToBoundary(entity);
+//			else
+//				throw new RuntimeException("Could not find instance " + instanceId);
 
 		} else {
 			throw new RuntimeException("Could not find instance " + instanceId);// NullPointerException
@@ -200,8 +186,8 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	@Transactional
 	public void deleteAllInstances(String adminDomain, String adminEmail) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail)); 
-				//this.userDao.findById(adminDomain + "@@" + adminEmail);
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail));
+		// this.userDao.findById(adminDomain + "@@" + adminEmail);
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN))

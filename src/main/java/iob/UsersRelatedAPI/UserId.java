@@ -23,6 +23,8 @@ import lombok.Setter;
 @Setter
 public class UserId implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="USER_ID_DOMAIN")
 	private String domain;
 	

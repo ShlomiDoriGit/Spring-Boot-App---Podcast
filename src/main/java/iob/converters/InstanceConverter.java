@@ -61,8 +61,8 @@ public class InstanceConverter {
 		}
 		if (boundary.getCreatedTimestamp() != null) {
 			entity.setCreatedTimestamp(boundary.getCreatedTimestamp());
-		}
-		if (boundary.getCreatedBy().getUserId() != null) {
+		}	
+		if (boundary.getCreatedBy() != null && boundary.getCreatedBy().getUserId() != null) {
 			if (boundary.getCreatedBy().getUserId().getDomain() != null) {
 				entity.setCreatedByUserDomain(boundary.getCreatedBy().getUserId().getDomain());
 			}

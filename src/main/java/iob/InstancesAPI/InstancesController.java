@@ -28,7 +28,7 @@ public class InstancesController {
 	}
 
 	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void updateUser(@RequestBody InstanceBoundary instance, @PathVariable("userDomain") String user_domain,
+	public void updateInstance(@RequestBody InstanceBoundary instance, @PathVariable("userDomain") String user_domain,
 			@PathVariable("userEmail") String email, @PathVariable("instanceDomain") String instance_domain,
 			@PathVariable("instanceId") String instanceId) {
 		instancesSrevice.updateInstance(instance_domain, email, instance_domain, instanceId, instance);

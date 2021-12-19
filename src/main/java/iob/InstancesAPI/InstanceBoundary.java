@@ -3,6 +3,8 @@ package iob.InstancesAPI;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import iob.Boundaries.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,4 +53,9 @@ public class InstanceBoundary {
 	private CreatedBy createdBy;
 	private Location location;
 	private Map<String, Object> instanceAttributes;
+//	@Autowired
+//	public void addCreatedBy() {
+//		if(this.createdBy == null)
+//			this.createdBy = new CreatedBy();
+//	}
 }
