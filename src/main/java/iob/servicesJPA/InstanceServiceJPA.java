@@ -275,10 +275,6 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		return child.getOrigins().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
-	@Override
-	public InstanceEntity[] searchByName(String name, int size, int page) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 }

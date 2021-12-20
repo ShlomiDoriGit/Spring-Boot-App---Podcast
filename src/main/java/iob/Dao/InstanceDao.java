@@ -13,10 +13,19 @@ import iob.data.InstanceEntity;
 
 public interface InstanceDao extends PagingAndSortingRepository<InstanceEntity, InstanceId> {
 
-	public List<InstanceEntity> findByName(@Param("name") String name, Pageable pageable);
-	public List<InstanceEntity> findByType(@Param("type") String type, Pageable pageable);
-	public List<InstanceEntity> findByLocation(@Param("lat") double lat,@Param("lng") double lng ,Pageable pageable);
-	public List<InstanceEntity> findByCreate(@Param("creationWindow")  Date createdTimestamp, Pageable pageable);
+	public List<InstanceEntity> findByName(
+			@Param("name") String name,
+			Pageable pageable);
+	public List<InstanceEntity> findByType(
+			@Param("type") String type,
+			Pageable pageable);
+	public List<InstanceEntity> findByLatAndLng(
+			@Param("lat") double lat,
+			@Param("lng") double lng ,
+			Pageable pageable);
+	public List<InstanceEntity> findByCreatedTimestamp(
+			@Param("creationWindow")  Date createdTimestamp,
+			Pageable pageable);
 
 
 }
