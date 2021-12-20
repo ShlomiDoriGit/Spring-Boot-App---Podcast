@@ -1,5 +1,6 @@
 package iob.Dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,5 +13,10 @@ import iob.data.InstanceEntity;
 
 public interface InstanceDao extends PagingAndSortingRepository<InstanceEntity, InstanceId> {
 
-	public List<InstanceEntity> findAllByName(@Param("name") String name, Pageable pageable);
+	public List<InstanceEntity> findByName(@Param("name") String name, Pageable pageable);
+	public List<InstanceEntity> findByType(@Param("type") String type, Pageable pageable);
+	public List<InstanceEntity> findByLocation(@Param("lat") double lat,@Param("lng") double lng ,Pageable pageable);
+	public List<InstanceEntity> findByCreate(@Param("creationWindow")  Date createdTimestamp, Pageable pageable);
+
+
 }

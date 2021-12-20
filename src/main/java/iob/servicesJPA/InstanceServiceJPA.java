@@ -234,7 +234,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getAllChildrensOfExistingInstance( String user_domain,
-			String email, String instance_domain, String instanceId) {
+			String email, String instance_domain, String instanceId,int page, int size) {
 		
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(user_domain,email));
 		UserEntity user = null;
@@ -256,8 +256,8 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getInstanceParents(String user_domain, String email,
-			String instance_domain, String instanceId) {
-		
+			String instance_domain, String instanceId,int page, int size) {
+	
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(user_domain,email));
 		UserEntity user = null;
 		if(optionalUser.isPresent()) {
@@ -267,9 +267,18 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		}else
 			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
 		
+		
 		InstanceEntity child = instanceConverter.convertToEntity(
 				getSpecificInstance(user_domain, email, instance_domain, instanceId));
+		
+		
 		return child.getOrigins().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	public InstanceEntity[] searchByName(String name, int size, int page) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

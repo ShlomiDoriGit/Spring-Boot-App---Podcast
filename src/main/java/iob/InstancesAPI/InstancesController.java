@@ -62,30 +62,34 @@ public class InstancesController {
 				instance_domain, instanceId);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children", 
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children?size={size}&page={page}", 
 					method = RequestMethod.GET, 
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	public InstanceBoundary[] getAllChildrensOfExistingInstance(
 															   @PathVariable("userDomain") String user_domain, 
 															   @PathVariable("userEmail") String email,
 															   @PathVariable("instanceDomain") String instance_domain, 
-															   @PathVariable("instanceId") String instanceId) {
+															   @PathVariable("instanceId") String instanceId,
+															   @PathVariable("size") int size,
+															   @PathVariable("page") int page) {
 		return instancesSrevice
-				.getAllChildrensOfExistingInstance(user_domain, email, instance_domain, instanceId)
+				.getAllChildrensOfExistingInstance(user_domain, email, instance_domain, instanceId,size,page)
 				.toArray(new InstanceBoundary[0]);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/parents", 
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/parents?size={size}&page={page}", 
 					method = RequestMethod.GET, 
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	public InstanceBoundary[] getInstanceParents(
 												@PathVariable("userDomain") String user_domain, 
 												@PathVariable("userEmail") String email,
 												@PathVariable("instanceDomain") String instance_domain, 
-												@PathVariable("instanceId") String instanceId) {
+												@PathVariable("instanceId") String instanceId,
+												@PathVariable("size") int size,
+												@PathVariable("page") int page) {
 		
 		
-		return instancesSrevice.getInstanceParents(user_domain, email, instance_domain, instanceId)
+		return instancesSrevice.getInstanceParents(user_domain, email, instance_domain, instanceId,size,page)
 				.toArray(new InstanceBoundary[0]);
 	}
 
