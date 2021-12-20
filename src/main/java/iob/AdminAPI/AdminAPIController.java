@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 import iob.ActivitiesAPI.ActivityBoundary;
 import iob.UsersRelatedAPI.UserBoundary;
 import iob.logic.EnhancedActivitiesService;
+import iob.logic.EnhancedInstancesServiceWithPagging;
 import iob.logic.EnhancedUsersService;
-import iob.logic.InstancesService;
 
 @RestController
 public class AdminAPIController {
 	private EnhancedUsersService usersService;
-	private InstancesService instancesSrevice;
+	private EnhancedInstancesServiceWithPagging instancesSrevice;
 	private EnhancedActivitiesService activitiesService;
 
 	@Autowired
-	public AdminAPIController(EnhancedUsersService usersService, InstancesService instancesSrevice,
+	public AdminAPIController(EnhancedUsersService usersService, EnhancedInstancesServiceWithPagging instancesSrevice,
 			EnhancedActivitiesService activitiesService) {
 		this.usersService = usersService;
 		this.instancesSrevice = instancesSrevice;

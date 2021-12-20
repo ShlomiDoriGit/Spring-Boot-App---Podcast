@@ -1,6 +1,5 @@
 package iob.InstancesAPI;
 
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import iob.logic.EnhancedInstancesService;
+import iob.logic.EnhancedInstancesServiceWithPagging;
 
 @RestController
 public class InstancesController {
 
-	private EnhancedInstancesService instancesSrevice;
+	private EnhancedInstancesServiceWithPagging instancesSrevice;
 
 	@Autowired
-	public InstancesController(EnhancedInstancesService instancesSrevice) {
+	public InstancesController(EnhancedInstancesServiceWithPagging instancesSrevice) {
 		this.instancesSrevice = instancesSrevice;
 	}
 
