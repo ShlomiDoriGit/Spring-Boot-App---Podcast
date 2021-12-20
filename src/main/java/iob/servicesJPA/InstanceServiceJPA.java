@@ -1,13 +1,17 @@
 package iob.servicesJPA;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
+import org.apache.logging.log4j.util.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -255,7 +259,8 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 	public List<InstanceBoundary> getInstanceParents(String user_domain, String email, String instance_domain,
 			String instanceId, int page, int size) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(user_domain, email));
+		Optional<UserEntity> optionalUser = this.userDao
+				.findById(new UserId(user_domain, email));
 		UserEntity user = null;
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
@@ -264,10 +269,23 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		} else
 			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
 
-		InstanceEntity child = instanceConverter
-				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
+//		InstanceEntity child = instanceConverter
+//				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
+//
+//		return child.getParents().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+		
+		InstanceId childId = new InstanceId(instance_domain, instanceId);
+		InstanceEntity child = this.instanceDao
+				.findById(childId)
+				.orElse(null);
+		if(child == null) {
+			throw new RuntimeException("Can't find instance with domian : " + instance_domain + " and id : " + instanceId);
+		}
 
-		return child.getParents().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+		Iterable<InstanceEntity> parents = child.getParents();
+		return (ArrayList<InstanceBoundary>) StreamSupport.stream(parents.spliterator(), false) 
+				.map(this.instanceConverter::convertToBoundary)
+				.collect(Collectors.toList());
 	}
 
 	@Override
