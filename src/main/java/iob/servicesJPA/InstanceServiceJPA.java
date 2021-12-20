@@ -287,29 +287,51 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 				.map(this.instanceConverter::convertToBoundary)
 				.collect(Collectors.toList());
 	}
+	
+//	SPRINT 5
+	
+	private List<InstanceBoundary> entitiesToBoundaries(List<InstanceEntity> entities){
+		return entities
+				.stream()
+				.map(this.instanceConverter::convertToBoundary)
+				.collect(Collectors.toList());
+	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByName(String name, int size, int page) {
-		// TODO Auto-generated method stub
-		return null;
+		List<InstanceEntity> entities = this.instanceDao
+				.findByName(name, 
+						PageRequest.of(page, size, Direction.DESC, "name", "createdTimestamp", "insanceId"));
+		return entitiesToBoundaries(entities);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByType(String type, int size, int page) {
-		// TODO Auto-generated method stub
-		return null;
+		List<InstanceEntity> entities = this.instanceDao
+				.findByType(type, 
+						PageRequest.of(page, size, Direction.DESC, "type", "createdTimestamp", "insanceId"));
+		return entitiesToBoundaries(entities);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByLocation(double lat, double lng, int size, int page) {
-		// TODO Auto-generated method stub
-		return null;
+		List<InstanceEntity> entities = this.instanceDao
+				.findByLatAndLng(lat, lng, 
+						PageRequest.of(page, size, Direction.DESC, "lat", "lng", "createdTimestamp", "insanceId"));
+		return entitiesToBoundaries(entities);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByCreate(Date createdTimestamp, int size, int page) {
-		// TODO Auto-generated method stub
-		return null;
+		List<InstanceEntity> entities = this.instanceDao
+				.findByCreatedTimestamp(createdTimestamp, 
+						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "insanceId"));
+		return entitiesToBoundaries(entities);
 	}
 
+//	END OF SPRINT 5 //
 }
