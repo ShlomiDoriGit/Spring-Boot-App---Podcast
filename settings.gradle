@@ -4,4 +4,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = 'Podcast'
+rootProject.name = '2022a.lior.mitrany'
