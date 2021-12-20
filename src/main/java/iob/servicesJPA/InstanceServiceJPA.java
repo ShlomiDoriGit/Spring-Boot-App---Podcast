@@ -156,7 +156,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int page, int size) {
 		Direction direction = Direction.ASC;
-		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "instanceId");
+		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp");
 		Page<InstanceEntity> resultPage = this.instanceDao.findAll(pageable);
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
