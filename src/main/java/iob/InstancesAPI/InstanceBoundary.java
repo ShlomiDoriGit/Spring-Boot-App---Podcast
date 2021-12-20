@@ -53,9 +53,5 @@ public class InstanceBoundary {
 	private CreatedBy createdBy;
 	private Location location;
 	private Map<String, Object> instanceAttributes;
-//	@Autowired
-//	public void addCreatedBy() {
-//		if(this.createdBy == null)
-//			this.createdBy = new CreatedBy();
-//	}
+
 }

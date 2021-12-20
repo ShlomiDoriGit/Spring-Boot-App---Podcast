@@ -14,10 +14,5 @@ import lombok.Setter;
 @Setter
 public class CreatedBy {
 	private UserId userId;
-	
-//	@Autowired
-//	public void addCreatedBy() {
-//		if(this.userId == null)
-//			this.userId = new UserId();
-//	}
+
 }

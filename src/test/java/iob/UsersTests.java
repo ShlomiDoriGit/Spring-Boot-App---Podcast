@@ -40,7 +40,7 @@ class UsersTests {
 
 	@AfterEach
 	public void teardown() {
-		// this.restTemplate.delete(this.url);
+		 this.restTemplate.delete(this.url);
 	}
 
 	@Test
