@@ -46,6 +46,7 @@ public class ActivityEntity  {
 	@Column(name = "ACTIVITY_INSTANCE_ID")
 	private String activityInstanceId;
 	
+//	@Column(name="MESSAGE_CREATION_TOMESTAMP")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTimestamp;
 	
@@ -59,14 +60,14 @@ public class ActivityEntity  {
 	@Lob
 	private Map<String, Object> activityAttributes;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private ActivityEntity origin;
-
-	@OneToMany(mappedBy = "origin", fetch = FetchType.LAZY)
-	private Set<ActivityEntity> responses = new HashSet<>();
-
-	public void addResponse(ActivityEntity response) {
-		this.responses.add(response);
-	}
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	private ActivityEntity origin;
+//
+//	@OneToMany(mappedBy = "origin", fetch = FetchType.LAZY)
+//	private Set<ActivityEntity> responses = new HashSet<>();
+//
+//	public void addResponse(ActivityEntity response) {
+//		this.responses.add(response);
+//	}
 
 }

@@ -211,7 +211,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 			if (admin.getRole().equals(UserRole.ADMIN))
 				this.instanceDao.deleteAll();
 			else
-				throw new RuntimeException("Only user with ADMIN role can delete all items");
+				throw new RuntimeException("Only user with ADMIN role can delete all Instance");
 		} else
 			throw new RuntimeException("Can't find user with domian : " + adminDomain + " and id : " + adminEmail);
 
@@ -226,7 +226,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		InstanceEntity origion = instanceConverter
 				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
 		origion.addChildren(child);
-		child.addOrigin(origion);
+		child.addParent(origion);
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
 			if (user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Admin does not have permission to get items");
+				throw new RuntimeException("Admin does not have permission to get Instance");
 		} else
 			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
 
@@ -260,14 +260,14 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
 			if (user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Admin does not have permission to get items");
+				throw new RuntimeException("Admin does not have permission to get Instance");
 		} else
 			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
 
 		InstanceEntity child = instanceConverter
 				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
 
-		return child.getOrigins().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+		return child.getParents().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
 	@Override

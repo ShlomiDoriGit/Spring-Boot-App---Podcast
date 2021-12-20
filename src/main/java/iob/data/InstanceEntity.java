@@ -10,11 +10,13 @@ import javax.persistence.Convert;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.JoinColumn;
 
 import iob.InstancesAPI.InstanceId;
 import iob.converters.IobMapToJsonConverter;
@@ -63,10 +65,16 @@ public class InstanceEntity  {
 	@Lob
 	private Map<String, Object> instanceAttributes;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	private Set<InstanceEntity> origins = new HashSet<>();
+//	@ManyToMany(mappedBy="childrens")
+	@ManyToMany(fetch = FetchType.LAZY) // Archive
+	private Set<InstanceEntity> parents = new HashSet<>();
 	
-	@ManyToMany(mappedBy = "origins", fetch = FetchType.LAZY)
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(
+//			name="Instance_Many2Many", 
+//			joinColumns={@JoinColumn(name="origin")}, 
+//			inverseJoinColumns={@JoinColumn(name="child")})
+	@ManyToMany(mappedBy = "parents", fetch = FetchType.LAZY) // Archive
 	private Set<InstanceEntity> childrens = new HashSet<>();
 
 	
@@ -74,11 +82,12 @@ public class InstanceEntity  {
 		return this.active;
 	}
 	
-	public void addOrigin(InstanceEntity origin) {
-		this.origins.add(origin);
+	public void addParent(InstanceEntity parent) {
+		this.parents.add(parent);
 	}
 	
 	public void addChildren(InstanceEntity children) {
 		this.childrens.add(children);
+		children.addParent(this);
 	}
 }
