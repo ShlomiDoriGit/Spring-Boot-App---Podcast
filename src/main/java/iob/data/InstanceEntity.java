@@ -35,13 +35,6 @@ public class InstanceEntity  {
 	@EmbeddedId
 	private InstanceId insanceId;
 	
-//	@Column(name = "INSTANCE_DOMAIN")
-//	private String instanceDomain;
-//	
-//	@Id
-//	@Column(name = "INSTANCE_ID")
-//	private String instanceId;
-	
 	@Column(name = "TYPE")
 	private String type;
 	

@@ -60,8 +60,7 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 	public Object invokeActivity(ActivityBoundary activity) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId( activity.getInvokedBy().getUserId().getDomain() , activity.getInvokedBy().getUserId().getEmail()));
-				//activity.getInvokedBy().getUserId().getDomain() + "@@" + activity.getInvokedBy().getUserId().getEmail());
-
+		
 		if (optionalUser.isPresent()) {
 			if (optionalUser.get().getRole().equals(UserRole.PLAYER) == false)
 				throw new RuntimeException("Only a player can make activities");
@@ -73,6 +72,8 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 		String newId = UUID.randomUUID().toString();
 		activity.setActivityId(new ActivityId(appName, newId));
 		activity.setCreatedTimestamp(new Date());
+		
+		
 		if (activity.getInstance() == null)
 			throw new RuntimeException("Can't invoke activity with null instance");
 
@@ -92,7 +93,10 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 		else if (activity.getInvokedBy().getUserId().getEmail() == null
 				|| activity.getInvokedBy().getUserId().getDomain() == null)
 			throw new RuntimeException("Can't invoke activity with null user domain or email");
-
+		
+		else if (activity.getType() == null || activity.getType() == "")
+			throw new RuntimeException("Activity type is undefiend");
+		
 		ActivityEntity entity = this.activityConverter.convertToEntity(activity);
 		entity = this.activityDao.save(entity);
 		return this.activityConverter.convertToBoundary(entity);
