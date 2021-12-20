@@ -1,5 +1,7 @@
 package iob.InstancesAPI;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,20 +62,30 @@ public class InstancesController {
 				instance_domain, instanceId);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] getAllChildrensOfExistingInstance(@RequestBody InstanceId instanceIdBoundary,
-			@PathVariable("userDomain") String user_domain, @PathVariable("userEmail") String email,
-			@PathVariable("instanceDomain") String instance_domain, @PathVariable("instanceId") String instanceId) {
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children", 
+					method = RequestMethod.GET, 
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getAllChildrensOfExistingInstance(
+															   @PathVariable("userDomain") String user_domain, 
+															   @PathVariable("userEmail") String email,
+															   @PathVariable("instanceDomain") String instance_domain, 
+															   @PathVariable("instanceId") String instanceId) {
 		return instancesSrevice
-				.getAllChildrensOfExistingInstance(instanceIdBoundary, user_domain, email, instance_domain, instanceId)
+				.getAllChildrensOfExistingInstance(user_domain, email, instance_domain, instanceId)
 				.toArray(new InstanceBoundary[0]);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/parent", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] getInstanceParents(@RequestBody InstanceId instanceIdBoundary,
-			@PathVariable("userDomain") String user_domain, @PathVariable("userEmail") String email,
-			@PathVariable("instanceDomain") String instance_domain, @PathVariable("instanceId") String instanceId) {
-		return instancesSrevice.getInstanceParents(instanceIdBoundary, user_domain, email, instance_domain, instanceId)
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/parents", 
+					method = RequestMethod.GET, 
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getInstanceParents(
+												@PathVariable("userDomain") String user_domain, 
+												@PathVariable("userEmail") String email,
+												@PathVariable("instanceDomain") String instance_domain, 
+												@PathVariable("instanceId") String instanceId) {
+		
+		
+		return instancesSrevice.getInstanceParents(user_domain, email, instance_domain, instanceId)
 				.toArray(new InstanceBoundary[0]);
 	}
 

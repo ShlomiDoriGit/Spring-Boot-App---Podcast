@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,10 +82,10 @@ public class UserServiceJpa implements EnhancedUsersService {
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN)) { // Permission check
-//				Iterable<UserEntity>  allEntities = this.userDao
-//						.findAll();
+				Iterable<UserEntity>  allEntities = resultPage;
+						
 
-				return resultPage.stream().map(this.userConverter::convertToBoundary) // Stream<UserBoundary>
+				return ((Streamable<UserEntity>) allEntities).stream().map(this.userConverter::convertToBoundary) // Stream<UserBoundary>
 						.collect(Collectors.toList()); // List<UserBoundary>
 
 			} else
@@ -151,6 +152,7 @@ public class UserServiceJpa implements EnhancedUsersService {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN))
 				this.userDao.deleteAll();
+			
 			else
 				throw new RuntimeException("Only user with ADMIN role can delete all users");
 		} else

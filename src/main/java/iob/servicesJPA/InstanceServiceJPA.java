@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -150,6 +151,8 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		throw new RuntimeException("Uninmplemented deprecated operation");
 	}
 
+	
+	
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int page, int size) {
@@ -157,11 +160,22 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp", "instanceId");
 		Page<InstanceEntity> resultPage = this.instanceDao.findAll(pageable);
 
-		// Iterable<InstanceEntity> allEntities = this.instanceDao.findAll();
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
+		UserEntity user;
+		if (optionalUser.isPresent()) {
+			user = optionalUser.get();
+			if(user.getRole().equals(UserRole.ADMIN))
+				throw new RuntimeException("Admin does not have permission to get instances");
+		} else
+			throw new RuntimeException("Cannot find the user");
+		
+		Iterable<InstanceEntity> allEntities = resultPage;
 
-		return resultPage.stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
+		return ((Streamable<InstanceEntity>) allEntities).stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
+	
+	
 	@Override
 	@Transactional(readOnly = true)
 	public InstanceBoundary getSpecificInstance(String userDomain, String userEmail, String InstanceDomain,
@@ -171,6 +185,8 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 		UserEntity user;
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
+			if(user.getRole().equals(UserRole.ADMIN))
+				throw new RuntimeException("Admin does not have permission to get instances");
 		} else
 			throw new RuntimeException("Cannot find the user");
 
@@ -192,7 +208,6 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 	public void deleteAllInstances(String adminDomain, String adminEmail) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail));
-		// this.userDao.findById(adminDomain + "@@" + adminEmail);
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN))
@@ -200,7 +215,7 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 			else
 				throw new RuntimeException("Only user with ADMIN role can delete all items");
 		} else
-			throw new RuntimeException("Can't find user with space : " + adminDomain + " and id : " + adminEmail);
+			throw new RuntimeException("Can't find user with domian : " + adminDomain + " and id : " + adminEmail);
 
 	}
 
@@ -218,20 +233,42 @@ public class InstanceServiceJPA implements EnhancedInstancesService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<InstanceBoundary> getAllChildrensOfExistingInstance(InstanceId instanceIdBoundary, String user_domain,
+	public List<InstanceBoundary> getAllChildrensOfExistingInstance( String user_domain,
 			String email, String instance_domain, String instanceId) {
+		
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(user_domain,email));
+		UserEntity user = null;
+		if(optionalUser.isPresent()) {
+			user = optionalUser.get();
+			if(user.getRole().equals(UserRole.ADMIN))
+				throw new RuntimeException("Admin does not have permission to get items");
+		}else
+			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
+
 		InstanceEntity origion = instanceConverter.convertToEntity(
-				getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+				getSpecificInstance(user_domain, email, instance_domain, instanceId));
+		
+		
 		return origion.getChildrens().stream().map(this.instanceConverter::convertToBoundary)
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<InstanceBoundary> getInstanceParents(InstanceId instanceIdBoundary, String user_domain, String email,
+	public List<InstanceBoundary> getInstanceParents(String user_domain, String email,
 			String instance_domain, String instanceId) {
+		
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(user_domain,email));
+		UserEntity user = null;
+		if(optionalUser.isPresent()) {
+			user = optionalUser.get();
+			if(user.getRole().equals(UserRole.ADMIN))
+				throw new RuntimeException("Admin does not have permission to get items");
+		}else
+			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
+		
 		InstanceEntity child = instanceConverter.convertToEntity(
-				getSpecificInstance(user_domain, email, instanceIdBoundary.getDomain(), instanceIdBoundary.getId()));
+				getSpecificInstance(user_domain, email, instance_domain, instanceId));
 		return child.getOrigins().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
