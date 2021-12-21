@@ -22,10 +22,14 @@ import iob.UsersRelatedAPI.UserId;
 import iob.converters.UserConverter;
 import iob.data.UserEntity;
 import iob.data.UserRole;
+import iob.errors.BadRequestException;
+import iob.errors.ForbiddenRequestException;
+import iob.errors.NotFoundException;
 import iob.logic.EnhancedUsersService;
 
 @Service
 public class UserServiceJpa implements EnhancedUsersService {
+
 	private UserDao userDao;
 	private String appName;
 	private UserConverter userConverter;
@@ -53,11 +57,15 @@ public class UserServiceJpa implements EnhancedUsersService {
 			@SuppressWarnings("unused")
 			UserRole temp = UserRole.valueOf(user.getRole());
 		} catch (IllegalArgumentException ex) {
-			throw new RuntimeException("could not create user by role: " + user.getRole());
+			throw new BadRequestException("could not create user by role: " + user.getRole());
 		}
 		if (user.getUserId().getEmail() == null || user.getUserId().getEmail() == "")
-			throw new RuntimeException("could not create user with no email");
+			throw new BadRequestException("could not create user with no email");
 
+		Optional<UserEntity> optionalUser = this.userDao.findById(user.getUserId());
+		if (optionalUser.isPresent()) {
+			throw new BadRequestException("User already exists");
+		}
 		user.getUserId().setDomain(appName);
 		UserEntity entity = this.userConverter.convertToEntity(user);
 		entity = this.userDao.save(entity);
@@ -67,7 +75,8 @@ public class UserServiceJpa implements EnhancedUsersService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminDomain, String adminEmail) {
-		throw new RuntimeException("Uninmplemented deprecated operation");
+		throw new BadRequestException("Uninmplemented deprecated operation");
+		// TODO: check if admin, only admin can return all users
 	}
 
 	@Override
@@ -82,16 +91,15 @@ public class UserServiceJpa implements EnhancedUsersService {
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN)) { // Permission check
-				Iterable<UserEntity>  allEntities = resultPage;
-						
+				Iterable<UserEntity> allEntities = resultPage;
 
 				return ((Streamable<UserEntity>) allEntities).stream().map(this.userConverter::convertToBoundary) // Stream<UserBoundary>
 						.collect(Collectors.toList()); // List<UserBoundary>
 
 			} else
-				throw new RuntimeException("Only user with ADMIN role can get all users");
+				throw new ForbiddenRequestException("Only user with ADMIN role can get all users");
 		} else {
-			throw new RuntimeException("Can't find user with domain : " + adminDomain + " and id : " + adminEmail);
+			throw new NotFoundException("Can't find user with domain : " + adminDomain + " and id : " + adminEmail);
 		}
 
 	}
@@ -99,7 +107,7 @@ public class UserServiceJpa implements EnhancedUsersService {
 	@Override
 	@Transactional
 	public UserBoundary updateUser(String userDomain, String userEmail, UserBoundary update) {
-		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain ,userEmail));
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
 		if (optionalUser.isPresent()) {
 
 			UserEntity entity = optionalUser.get();
@@ -121,24 +129,21 @@ public class UserServiceJpa implements EnhancedUsersService {
 			return boundary;
 
 		}
-
 		else {
-			throw new RuntimeException("could not find user");
+			throw new NotFoundException("Can't find user with domain : " + userDomain + " and id : " + userEmail);
 		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public UserBoundary login(String userDomain, String userEmail) {
-
-//		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail).toString());
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
-		if (optionalUser != null) {
+		if (optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
 			UserBoundary boundary = userConverter.convertToBoundary(entity);
 			return boundary;
 		} else {
-			throw new RuntimeException("Could not find user by space and email: " + userDomain + " , " + userEmail);// NullPointerException
+			throw new BadRequestException("There is no user with domain: " + userDomain + " email: " + userEmail);// NullPointerException
 		}
 
 	}
@@ -147,16 +152,15 @@ public class UserServiceJpa implements EnhancedUsersService {
 	@Transactional
 	public void deleteAllUsers(String adminDomain, String adminEmail) {
 
-		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain ,adminEmail));
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(adminDomain, adminEmail));
 		if (optionalUser.isPresent()) {
 			UserEntity admin = optionalUser.get();
 			if (admin.getRole().equals(UserRole.ADMIN))
 				this.userDao.deleteAll();
-			
 			else
-				throw new RuntimeException("Only user with ADMIN role can delete all users");
+				throw new ForbiddenRequestException("Only user with ADMIN role can delete all users");
 		} else
-			throw new RuntimeException("Can't find user with space : " + adminDomain + " and id : " + adminEmail);
+			throw new BadRequestException("Can't find user with space : " + adminDomain + " and id : " + adminEmail);
 	}
 
 }

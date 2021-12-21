@@ -11,7 +11,6 @@ import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.util.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +28,9 @@ import iob.converters.InstanceConverter;
 import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
+import iob.errors.BadRequestException;
+import iob.errors.ForbiddenRequestException;
+import iob.errors.NotFoundException;
 import iob.logic.EnhancedInstancesService;
 import iob.logic.EnhancedInstancesServiceWithPagging;
 
@@ -67,13 +69,13 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 			InstanceEntity entity = this.instanceConverter.convertToEntity(instance);
 
 			if (userDomain == null || userDomain == "") {
-				throw new RuntimeException("Could not create an instance withot user's domail");
+				throw new BadRequestException("Could not create an instance withot user's domail");
 			}
 			if (userEmail == null || userEmail == "") {
-				throw new RuntimeException("Could not create an instance without user's email");
+				throw new BadRequestException("Could not create an instance without user's email");
 			}
 			if (instance == null)
-				throw new RuntimeException("Could not create an instance without instance boundary");
+				throw new BadRequestException("Could not create an instance without instance boundary");
 
 			// User
 			if (instance.getCreatedBy().getUserId().getDomain() == null
@@ -92,7 +94,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 			entity = this.instanceDao.save(entity);
 			return this.instanceConverter.convertToBoundary(entity);
 		}
-		throw new RuntimeException("No user found");
+		throw new BadRequestException("There is no user with domain: " + userDomain + " email: " + userEmail);// NullPointerException
 
 	}
 
@@ -106,10 +108,10 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		if (optinalUser.isPresent()) {
 			user = optinalUser.get();
 		} else {
-			throw new RuntimeException("No user found");
+			throw new BadRequestException("There is no user with domain: " + userDomain + " email: " + userEmail);// NullPointerException
 		}
 		if (user.getRole() != UserRole.MANAGER) {
-			throw new RuntimeException("Only MANAGER can update Instances");
+			throw new BadRequestException("Only MANAGER can update Instances");
 		}
 		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(instanceDomain, InstanceId));
 		if (optionalEntity.isPresent()) {
@@ -146,19 +148,20 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 
 		} else {
 			// No update for InstanceId because not found
-			throw new RuntimeException("Could not find instance");
+			throw new iob.errors.NotFoundException("Could not find instance");
 
 		}
 	}
 
 	@Override
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail) {
-		throw new RuntimeException("Uninmplemented deprecated operation");
+		throw new BadRequestException("Uninmplemented deprecated operation");
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> getAllInstances(String userDomain, String userEmail, int page, int size) {
+
 		Direction direction = Direction.ASC;
 		Pageable pageable = PageRequest.of(page, size, direction, "createdTimestamp");
 		Page<InstanceEntity> resultPage = this.instanceDao.findAll(pageable);
@@ -167,10 +170,11 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		UserEntity user;
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
-			if (user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Admin does not have permission to get instances");
+			if (user.getRole() == UserRole.ADMIN) {
+				throw new ForbiddenRequestException("Admin does not have permission to get instances");
+			}
 		} else
-			throw new RuntimeException("Cannot find the user");
+			throw new BadRequestException("Cannot find the user");
 
 		Iterable<InstanceEntity> allEntities = resultPage;
 
@@ -188,15 +192,15 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
 			if (user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Admin does not have permission to get instances");
+				throw new ForbiddenRequestException("Admin does not have permission to get instances");
 		} else
-			throw new RuntimeException("Cannot find the user");
+			throw new BadRequestException("Cannot find the user");
 
 		Optional<InstanceEntity> optionalEntity = this.instanceDao.findById(new InstanceId(InstanceDomain, instanceId));
 		if (optionalEntity.isPresent()) {
 			InstanceEntity entity = optionalEntity.get();
 			if (user.getRole() == UserRole.PLAYER && entity.getActive() == false) {
-				throw new RuntimeException("Instance not found " + instanceId);
+				throw new NotFoundException("Instance not found " + instanceId);
 			}
 			return this.instanceConverter.convertToBoundary(entity);
 		} else {
@@ -259,8 +263,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 	public List<InstanceBoundary> getInstanceParents(String user_domain, String email, String instance_domain,
 			String instanceId, int page, int size) {
 
-		Optional<UserEntity> optionalUser = this.userDao
-				.findById(new UserId(user_domain, email));
+		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(user_domain, email));
 		UserEntity user = null;
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
@@ -273,63 +276,54 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 //				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
 //
 //		return child.getParents().stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
-		
+
 		InstanceId childId = new InstanceId(instance_domain, instanceId);
-		InstanceEntity child = this.instanceDao
-				.findById(childId)
-				.orElse(null);
-		if(child == null) {
-			throw new RuntimeException("Can't find instance with domian : " + instance_domain + " and id : " + instanceId);
+		InstanceEntity child = this.instanceDao.findById(childId).orElse(null);
+		if (child == null) {
+			throw new RuntimeException(
+					"Can't find instance with domian : " + instance_domain + " and id : " + instanceId);
 		}
 
 		Iterable<InstanceEntity> parents = child.getParents();
-		return (ArrayList<InstanceBoundary>) StreamSupport.stream(parents.spliterator(), false) 
-				.map(this.instanceConverter::convertToBoundary)
-				.collect(Collectors.toList());
+		return (ArrayList<InstanceBoundary>) StreamSupport.stream(parents.spliterator(), false)
+				.map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
-	
+
 //	SPRINT 5
-	
-	private List<InstanceBoundary> entitiesToBoundaries(List<InstanceEntity> entities){
-		return entities
-				.stream()
-				.map(this.instanceConverter::convertToBoundary)
-				.collect(Collectors.toList());
+
+	private List<InstanceBoundary> entitiesToBoundaries(List<InstanceEntity> entities) {
+		return entities.stream().map(this.instanceConverter::convertToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByName(String name, int size, int page) {
-		List<InstanceEntity> entities = this.instanceDao
-				.findByName(name, 
-						PageRequest.of(page, size, Direction.DESC, "name", "createdTimestamp", "insanceId"));
+		List<InstanceEntity> entities = this.instanceDao.findByName(name,
+				PageRequest.of(page, size, Direction.DESC, "name", "createdTimestamp", "insanceId"));
 		return entitiesToBoundaries(entities);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByType(String type, int size, int page) {
-		List<InstanceEntity> entities = this.instanceDao
-				.findByType(type, 
-						PageRequest.of(page, size, Direction.DESC, "type", "createdTimestamp", "insanceId"));
+		List<InstanceEntity> entities = this.instanceDao.findByType(type,
+				PageRequest.of(page, size, Direction.DESC, "type", "createdTimestamp", "insanceId"));
 		return entitiesToBoundaries(entities);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByLocation(double lat, double lng, int size, int page) {
-		List<InstanceEntity> entities = this.instanceDao
-				.findByLatAndLng(lat, lng, 
-						PageRequest.of(page, size, Direction.DESC, "lat", "lng", "createdTimestamp", "insanceId"));
+		List<InstanceEntity> entities = this.instanceDao.findByLatAndLng(lat, lng,
+				PageRequest.of(page, size, Direction.DESC, "lat", "lng", "createdTimestamp", "insanceId"));
 		return entitiesToBoundaries(entities);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<InstanceBoundary> searchByCreate(Date createdTimestamp, int size, int page) {
-		List<InstanceEntity> entities = this.instanceDao
-				.findByCreatedTimestamp(createdTimestamp, 
-						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "insanceId"));
+		List<InstanceEntity> entities = this.instanceDao.findByCreatedTimestamp(createdTimestamp,
+				PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "insanceId"));
 		return entitiesToBoundaries(entities);
 	}
 

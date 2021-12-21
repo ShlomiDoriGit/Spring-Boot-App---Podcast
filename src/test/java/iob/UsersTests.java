@@ -40,7 +40,7 @@ class UsersTests {
 
 	@AfterEach
 	public void teardown() {
-		 this.restTemplate.delete(this.url);
+//		 this.restTemplate.delete(this.url);
 	}
 
 	@Test
@@ -54,6 +54,8 @@ class UsersTests {
 		assertThat(newUser.getAvatar().equals(user.getAvatar()));
 		assertThat(newUser.getRole() == user.getRole());
 		assertThat(newUser.getUsername().equals(user.getUsername()));
+		assertThat("x".equals("x"));
+		
 	}
 
 	@Test

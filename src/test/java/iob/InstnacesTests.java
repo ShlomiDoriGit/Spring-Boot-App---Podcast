@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.client.RestTemplate;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 import iob.Boundaries.Location;
 import iob.InstancesAPI.CreatedBy;
 import iob.InstancesAPI.InstanceBoundary;
@@ -158,34 +160,45 @@ public class InstnacesTests {
 
 		// For Admin
 		// Manager get Instance URL
-		getInsatnceURL = this.url + "/iob/instances/" + this.appName + "/" + this.userAdmin.getUserId().getEmail() + "/"
-				+ this.userAdmin.getUserId().getDomain() + "/" + postedInstance.getInstanceId().getId();
-////		exception = assertThrows(RuntimeException.class, () -> {
-//			InstanceBoundary createdInstanceAdmin = this.restTemplate.getForObject(getInsatnceURL, InstanceBoundary.class);
-//		});
-//		expectedMessage = "Admin does not have permission to get instances";
-//		assertThat(actualMessage.equals(expectedMessage));
+
+		exception = assertThrows(RuntimeException.class, () -> {
+			url = this.url + "/iob/instances/" + this.appName + "/" + this.userAdmin.getUserId().getEmail() + "/"
+					+ this.userAdmin.getUserId().getDomain() + "/" + postedInstance.getInstanceId().getId();
+			InstanceBoundary createdInstanceAdmin = this.restTemplate.getForObject(url, InstanceBoundary.class);
+		});
+		expectedMessage = "Admin does not have permission to get instances";
+		assertThat(actualMessage.equals(expectedMessage));
 	}
 
-//	@Test
-//	public void deleteAllItems() {
-//		// Create the Instance
-//		InstanceBoundary newInstance = getInsatnceBoundaryForTesting();
-//		newInstance.setActive(false);
-//		String postUrl = this.url + "/iob/instances/" + appName + "/" + this.userPlayer.getUserId().getEmail();
-//		// Create Player user and instance not active
-//		this.restTemplate.postForObject(postUrl, newInstance, InstanceBoundary.class);
-//		// Create the Instance
-//		newInstance = getInsatnceBoundaryForTesting();
-//		newInstance.setActive(false);
-//		// Create Player user and instance not active
-//		this.restTemplate.postForObject(postUrl, newInstance, InstanceBoundary.class);
-//
-//
-//		// Check that we got 2 instances
-//		String getAllInstancesURL = this.url + "/iob/admin/users/" + this.userAdmin.getUserId().getDomain() + "/"
-//				+ this.userAdmin.getUserId().getEmail();
-//		
-//		// Remove all instances
-//	}
+	@Test
+	public void deleteGettAllItemsAndDeleteAllitems() {
+		// Create the Instance
+		InstanceBoundary newInstance = getInsatnceBoundaryForTesting();
+		newInstance.setActive(false);
+		String postUrl = this.url + "/iob/instances/" + appName + "/" + this.userPlayer.getUserId().getEmail();
+		// Create Player user and instance not active
+		this.restTemplate.postForObject(postUrl, newInstance, InstanceBoundary.class);
+		// Create the Instance
+		newInstance = getInsatnceBoundaryForTesting();
+		newInstance.setActive(false);
+		// Create Player user and instance not active
+		this.restTemplate.postForObject(postUrl, newInstance, InstanceBoundary.class);
+		// Check that we got 2 instances
+		// Try Admin exeption
+		Exception exception = assertThrows(RuntimeException.class, () -> {
+			// Try to get the Instance, expected exeption
+			String getAllInstancesURL = this.url + "/iob/instances/" + this.userAdmin.getUserId().getDomain() + "/"
+					+ this.userAdmin.getUserId().getEmail();
+			InstanceBoundary[] instances = this.restTemplate.getForObject(getAllInstancesURL, InstanceBoundary[].class);
+		});
+		String expectedMessage = "Admin does not have permission to get instances";
+		String actualMessage = exception.getMessage();
+		assertThat(actualMessage.equals(expectedMessage));
+		// Try get all instances with player
+		String getAllInstancesURL = this.url + "/iob/instances/" + this.userPlayer.getUserId().getDomain() + "/"
+				+ this.userPlayer.getUserId().getEmail();
+		InstanceBoundary[] instances = this.restTemplate.getForObject(getAllInstancesURL, InstanceBoundary[].class);
+		assertThat(instances.length == 2);
+		// Remove all instances
+	}
 }
