@@ -1,6 +1,5 @@
 package iob.InstancesAPI;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import iob.logic.EnhancedInstancesServiceWithPagging;
+import iob.logic.EnhancedInstancesServiceWithPagination;
 
 @RestController
 public class InstancesController {
 
-	private EnhancedInstancesServiceWithPagging instancesSrevice;
+	private EnhancedInstancesServiceWithPagination instancesSrevice;
 
 	@Autowired
-	public InstancesController(EnhancedInstancesServiceWithPagging instancesSrevice) {
+	public InstancesController(EnhancedInstancesServiceWithPagination instancesSrevice) {
 		this.instancesSrevice = instancesSrevice;
 	}
 
@@ -61,34 +60,25 @@ public class InstancesController {
 				instance_domain, instanceId);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children?size={size}&page={page}", 
-					method = RequestMethod.GET, 
-					produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] getAllChildrensOfExistingInstance(
-															   @PathVariable("userDomain") String user_domain, 
-															   @PathVariable("userEmail") String email,
-															   @PathVariable("instanceDomain") String instance_domain, 
-															   @PathVariable("instanceId") String instanceId,
-															   @PathVariable("size") int size,
-															   @PathVariable("page") int page) {
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/children?size={size}&page={page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getAllChildrensOfExistingInstance(@PathVariable("userDomain") String user_domain,
+			@PathVariable("userEmail") String email, @PathVariable("instanceDomain") String instance_domain,
+			@PathVariable("instanceId") String instanceId,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return instancesSrevice
-				.getAllChildrensOfExistingInstance(user_domain, email, instance_domain, instanceId,size,page)
+				.getAllChildrensOfExistingInstance(user_domain, email, instance_domain, instanceId, size, page)
 				.toArray(new InstanceBoundary[0]);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/parents?size={size}&page={page}", 
-					method = RequestMethod.GET, 
-					produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] getInstanceParents(
-												@PathVariable("userDomain") String user_domain, 
-												@PathVariable("userEmail") String email,
-												@PathVariable("instanceDomain") String instance_domain, 
-												@PathVariable("instanceId") String instanceId,
-												@PathVariable("size") int size,
-												@PathVariable("page") int page) {
-		
-		
-		return instancesSrevice.getInstanceParents(user_domain, email, instance_domain, instanceId,size,page)
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/{instanceDomain}/{instanceId}/parents?size={size}&page={page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] getInstanceParents(@PathVariable("userDomain") String user_domain,
+			@PathVariable("userEmail") String email, @PathVariable("instanceDomain") String instance_domain,
+			@PathVariable("instanceId") String instanceId,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+
+		return instancesSrevice.getInstanceParents(user_domain, email, instance_domain, instanceId, size, page)
 				.toArray(new InstanceBoundary[0]);
 	}
 

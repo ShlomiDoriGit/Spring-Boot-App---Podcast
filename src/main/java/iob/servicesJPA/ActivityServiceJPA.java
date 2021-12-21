@@ -28,6 +28,8 @@ import iob.converters.ActivityConverter;
 import iob.data.ActivityEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
+import iob.errors.BadRequestException;
+import iob.errors.ForbiddenRequestException;
 import iob.logic.EnhancedActivitiesService;
 
 @Service
@@ -65,9 +67,9 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 
 		if (optionalUser.isPresent()) {
 			if (optionalUser.get().getRole().equals(UserRole.PLAYER) == false)
-				throw new RuntimeException("Only a player can make activities");
+				throw new ForbiddenRequestException("Only a player can make activities");
 		} else
-			throw new RuntimeException(
+			throw new BadRequestException(
 					"Can't find user with domain : " + activity.getInvokedBy().getUserId().getDomain() + "and id : "
 							+ activity.getInvokedBy().getUserId().getEmail());
 
@@ -76,27 +78,27 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 		activity.setCreatedTimestamp(new Date());
 
 		if (activity.getInstance() == null)
-			throw new RuntimeException("Can't invoke activity with null instance");
+			throw new BadRequestException("Can't invoke activity with null instance");
 
 		else if (activity.getInstance().getInstanceId() == null)
-			throw new RuntimeException("Can't invoke activity with null instance id");
+			throw new BadRequestException("Can't invoke activity with null instance id");
 
 		else if (activity.getInstance().getInstanceId().getDomain() == null
 				|| activity.getInstance().getInstanceId().getId() == null)
-			throw new RuntimeException("Can't invoke activity with null instance id or domain");
+			throw new BadRequestException("Can't invoke activity with null instance id or domain");
 
 		if (activity.getInvokedBy() == null)
-			throw new RuntimeException("Can't invoke activity with null user");
+			throw new BadRequestException("Can't invoke activity with null user");
 
 		else if (activity.getInvokedBy().getUserId() == null)
-			throw new RuntimeException("Can't invoke activity with null user id");
+			throw new BadRequestException("Can't invoke activity with null user id");
 
 		else if (activity.getInvokedBy().getUserId().getEmail() == null
 				|| activity.getInvokedBy().getUserId().getDomain() == null)
-			throw new RuntimeException("Can't invoke activity with null user domain or email");
+			throw new BadRequestException("Can't invoke activity with null user domain or email");
 
 		else if (activity.getType() == null || activity.getType() == "")
-			throw new RuntimeException("Activity type is undefiend");
+			throw new BadRequestException("Activity type is undefiend");
 
 		ActivityEntity entity = this.activityConverter.convertToEntity(activity);
 		entity = this.activityDao.save(entity);
@@ -107,7 +109,7 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail) {
-		throw new RuntimeException("Uninmplemented deprecated operation");
+		throw new BadRequestException("Uninmplemented deprecated operation");
 	}
 
 	@Override
@@ -130,9 +132,9 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 			}
 
 			else
-				throw new RuntimeException("Only user with ADMIN role can get all operations");
+				throw new ForbiddenRequestException("Only user with ADMIN role can get all operations");
 		} else
-			throw new RuntimeException("Can't find user with domain : " + adminDomain + " and id : " + adminEmail);
+			throw new BadRequestException("Can't find user with domain : " + adminDomain + " and id : " + adminEmail);
 	}
 
 	@Override
@@ -145,9 +147,9 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 			if (admin.getRole().equals(UserRole.ADMIN))
 				this.activityDao.deleteAll();
 			else
-				throw new RuntimeException("Only user with ADMIN role can delete all operations");
+				throw new ForbiddenRequestException("Only user with ADMIN role can delete all operations");
 		} else
-			throw new RuntimeException("Can't find user with domain : " + adminDomain + " and id : " + adminEmail);
+			throw new BadRequestException("Can't find user with domain : " + adminDomain + " and id : " + adminEmail);
 
 	}
 

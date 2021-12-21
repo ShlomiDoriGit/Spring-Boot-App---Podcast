@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import iob.InstancesAPI.InstanceBoundary;
 
-public interface EnhancedInstancesServiceWithPagging extends EnhancedInstancesService {
+public interface EnhancedInstancesServiceWithPagination extends EnhancedInstancesService {
 
 	public List<InstanceBoundary> searchByName(String name, int size, int page);
 

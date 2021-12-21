@@ -32,10 +32,10 @@ import iob.errors.BadRequestException;
 import iob.errors.ForbiddenRequestException;
 import iob.errors.NotFoundException;
 import iob.logic.EnhancedInstancesService;
-import iob.logic.EnhancedInstancesServiceWithPagging;
+import iob.logic.EnhancedInstancesServiceWithPagination;
 
 @Service
-public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
+public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagination {
 
 	private String appName;
 	private UserDao userDao;
@@ -204,7 +204,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 			}
 			return this.instanceConverter.convertToBoundary(entity);
 		} else {
-			throw new RuntimeException("Could not find instance " + instanceId);// NullPointerException
+			throw new BadRequestException("Could not find instance " + instanceId);// NullPointerException
 		}
 
 	}
@@ -219,9 +219,9 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 			if (admin.getRole().equals(UserRole.ADMIN))
 				this.instanceDao.deleteAll();
 			else
-				throw new RuntimeException("Only user with ADMIN role can delete all Instance");
+				throw new ForbiddenRequestException("Only user with ADMIN role can delete all Instance");
 		} else
-			throw new RuntimeException("Can't find user with domian : " + adminDomain + " and id : " + adminEmail);
+			throw new BadRequestException("Can't find user with domian : " + adminDomain + " and id : " + adminEmail);
 
 	}
 
@@ -247,9 +247,9 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
 			if (user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Admin does not have permission to get Instance");
+				throw new ForbiddenRequestException("Admin does not have permission to get Instance");
 		} else
-			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
+			throw new BadRequestException("Can't find user with domian : " + user_domain + " and id : " + email);
 
 		InstanceEntity origion = instanceConverter
 				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
@@ -268,9 +268,9 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
 			if (user.getRole().equals(UserRole.ADMIN))
-				throw new RuntimeException("Admin does not have permission to get Instance");
+				throw new ForbiddenRequestException("Admin does not have permission to get Instance");
 		} else
-			throw new RuntimeException("Can't find user with domian : " + user_domain + " and id : " + email);
+			throw new BadRequestException("Can't find user with domian : " + user_domain + " and id : " + email);
 
 //		InstanceEntity child = instanceConverter
 //				.convertToEntity(getSpecificInstance(user_domain, email, instance_domain, instanceId));
@@ -280,7 +280,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPagging {
 		InstanceId childId = new InstanceId(instance_domain, instanceId);
 		InstanceEntity child = this.instanceDao.findById(childId).orElse(null);
 		if (child == null) {
-			throw new RuntimeException(
+			throw new NotFoundException(
 					"Can't find instance with domian : " + instance_domain + " and id : " + instanceId);
 		}
 

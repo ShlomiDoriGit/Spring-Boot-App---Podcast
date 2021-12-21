@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import iob.logic.EnhancedInstancesServiceWithPagging;
+import iob.logic.EnhancedInstancesServiceWithPagination;
 
 
 @RestController
 public class SearchController {
-	private EnhancedInstancesServiceWithPagging instances;
+	private EnhancedInstancesServiceWithPagination instances;
 
 	@Autowired
-	public SearchController(EnhancedInstancesServiceWithPagging instances) {
+	public SearchController(EnhancedInstancesServiceWithPagination instances) {
 		super();
 		this.instances = instances;
 	}
