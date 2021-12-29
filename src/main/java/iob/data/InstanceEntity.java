@@ -29,6 +29,11 @@ import lombok.Data;
  * VARCHAR(255)      | VARCHAR(255)   | VARCHAR(255) | VARCHAR(255) | BOOLEAN   | TIMESTAMP         | VARCHAR(255)           | VARCHAR(255)          | DOUBL   | DOUBLE | CLOB                | VARCHAR(255)|
  * <PK>              | <PK>           |              |              |           |                   |                        |                       |         |                              | <FK>        |
  */
+
+/*
+ * TYPE: PODCAST, USER
+ * 
+ */
 @Entity
 @Table(name = "INSTANCES")
 @Data
@@ -64,10 +69,26 @@ public class InstanceEntity  {
 	@Convert(converter = IobMapToJsonConverter.class)
 	@Lob
 	private Map<String, Object> instanceAttributes;
+	/*
+	 * | 	USER	
+	 * | ?INTERESETS?
+	 * 		
+	 * |	PODCAST				
+	 * | GENRES, AUTHOR/S, ?URL?  
+	 * 
+	 */
 	
 //	@ManyToMany(mappedBy="childrens")
 	@ManyToMany(fetch = FetchType.LAZY) // Archive
 	private Set<InstanceEntity> parents = new HashSet<>();
+	/*
+	 * | 	USER	
+	 * | NOT RELAVANT
+	 * 		
+	 * |	PODCAST				
+	 * | USERS_LISTNERS 
+	 * 
+	 */
 	
 //	@ManyToMany(fetch = FetchType.LAZY)
 //	@JoinTable(
@@ -76,6 +97,14 @@ public class InstanceEntity  {
 //			inverseJoinColumns={@JoinColumn(name="child")})
 	@ManyToMany(mappedBy = "parents", fetch = FetchType.LAZY) // Archive
 	private Set<InstanceEntity> childrens = new HashSet<>();
+	/*
+	 * | 	USER	
+	 * | PODCAST LISTENING
+	 * 		
+	 * |	PODCAST				
+	 * | NOT RELAVANT 
+	 * 
+	 */
 
 	
 	public boolean getActive() {
