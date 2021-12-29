@@ -16,6 +16,7 @@ target/
 **/.classpath
 **/.settings/
 blog/bin/
+bin/
 **/.tern-project
 
 #IntelliJ files
