@@ -46,9 +46,9 @@ public class SearchController {
 	}
 
 	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/created/{creationWindow}?size={size}&page={page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] searchByCreate(@PathVariable("creationWindow") Date createdTimestamp,
+	public InstanceBoundary[] searchByCreate(@PathVariable("creationWindow") String creationWindow,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-		return instances.searchByCreate(createdTimestamp, size, page).toArray(new InstanceBoundary[0]);
+		return instances.searchByCreationWindow(creationWindow, size, page).toArray(new InstanceBoundary[0]);
 	}
 }

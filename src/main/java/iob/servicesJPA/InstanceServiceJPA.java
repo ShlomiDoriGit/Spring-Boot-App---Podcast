@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import iob.Dao.InstanceDao;
 import iob.Dao.UserDao;
+import iob.InstancesAPI.CreationWindow;
 import iob.InstancesAPI.InstanceBoundary;
 import iob.InstancesAPI.InstanceId;
 import iob.UsersRelatedAPI.UserId;
@@ -321,9 +322,38 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPaginatio
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<InstanceBoundary> searchByCreate(Date createdTimestamp, int size, int page) {
-		List<InstanceEntity> entities = this.instanceDao.findByCreatedTimestamp(createdTimestamp,
-				PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "insanceId"));
+	public List<InstanceBoundary> searchByCreationWindow(String creationWindow, int size, int page) {
+		List<InstanceEntity> entities;
+		CreationWindow creationWindowEnum;
+		try {
+			creationWindowEnum = CreationWindow.valueOf(creationWindow);
+		} catch (Exception e) {
+			creationWindowEnum = CreationWindow.LAST_30_DAYS;
+		}
+		
+		Date startTimestamp;
+		Date endTimestamp = new Date();
+		
+		
+		long day = 1000 * 60 * 60 * 24;
+		
+		switch (creationWindowEnum) {
+		case LAST_HOUR:
+			startTimestamp = new Date(endTimestamp.getTime() - (day / 24));
+			break;
+		case LAST_24_HOURS:
+			startTimestamp = new Date(endTimestamp.getTime() - day);
+			break;
+		case LAST_7_DAYS:
+			startTimestamp = new Date(endTimestamp.getTime() - (day * 7));
+			break;
+		case LAST_30_DAYS:
+			startTimestamp = new Date(endTimestamp.getTime() - (day * 30));
+			break;
+		default:
+			throw new BadRequestException("There is no Option to find by" + creationWindow); 
+		}
+		entities = this.instanceDao.findAllByCreatedTimestampBetween(startTimestamp, endTimestamp, PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "insanceId"));
 		return entitiesToBoundaries(entities);
 	}
 

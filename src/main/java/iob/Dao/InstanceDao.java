@@ -23,8 +23,12 @@ public interface InstanceDao extends PagingAndSortingRepository<InstanceEntity, 
 			@Param("lat") double lat,
 			@Param("lng") double lng ,
 			Pageable pageable);
-	public List<InstanceEntity> findByCreatedTimestamp(
-			@Param("creationWindow")  Date createdTimestamp,
+//	public List<InstanceEntity> findByCreatedTimestamp(
+//			@Param("creationWindow")  Date createdTimestamp,
+//			Pageable pageable);
+	
+	public List<InstanceEntity> findAllByCreatedTimestampBetween(
+			@Param("minimumValue") Date startTimestamp, @Param("maximumValue") Date endTimestamp, 
 			Pageable pageable);
 
 

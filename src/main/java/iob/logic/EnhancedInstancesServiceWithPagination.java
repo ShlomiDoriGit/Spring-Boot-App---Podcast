@@ -1,7 +1,8 @@
 package iob.logic;
 
-import java.util.Date;
 import java.util.List;
+
+import iob.InstancesAPI.CreationWindow;
 import iob.InstancesAPI.InstanceBoundary;
 
 public interface EnhancedInstancesServiceWithPagination extends EnhancedInstancesService {
@@ -12,5 +13,5 @@ public interface EnhancedInstancesServiceWithPagination extends EnhancedInstance
 
 	public List<InstanceBoundary> searchByLocation(double lat, double lng, int size, int page);
 
-	public List<InstanceBoundary> searchByCreate(Date createdTimestamp, int size, int page);
+	public List<InstanceBoundary> searchByCreationWindow(String creationWindow, int size, int page);
 }
