@@ -2,7 +2,6 @@ package iob.logic;
 
 import java.util.List;
 
-import iob.InstancesAPI.CreationWindow;
 import iob.InstancesAPI.InstanceBoundary;
 
 public interface EnhancedInstancesServiceWithPagination extends EnhancedInstancesService {

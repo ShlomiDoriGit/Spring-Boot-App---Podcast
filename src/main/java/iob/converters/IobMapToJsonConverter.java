@@ -24,11 +24,11 @@ public class IobMapToJsonConverter implements AttributeConverter<Map<String, Obj
 		}
 	}
 
+	
 	@Override
 	public Map<String, Object> convertToEntityAttribute(String json) {
 		try {
-			return this.jackson
-				.readValue(json, Map.class);
+			return this.jackson.readValue(json, Map.class);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

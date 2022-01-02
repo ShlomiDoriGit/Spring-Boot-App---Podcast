@@ -1,7 +1,5 @@
 package iob.InstancesAPI;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import iob.UsersRelatedAPI.UserId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

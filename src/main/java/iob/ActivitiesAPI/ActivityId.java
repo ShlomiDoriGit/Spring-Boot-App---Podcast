@@ -22,6 +22,8 @@ import lombok.Setter;
 @Setter
 public class ActivityId implements Serializable {
 	
+	private static final long serialVersionUID = -5989368198601676629L;
+
 	@Column(name = "ACTIVITY_DOMAIN")
 	private String domain;
 	
