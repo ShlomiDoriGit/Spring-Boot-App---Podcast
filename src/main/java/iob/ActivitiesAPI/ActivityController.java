@@ -40,7 +40,7 @@ public class ActivityController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object votePodcast (@RequestBody ActivityBoundary command) {
-		return this.activitiesService.implementPodcastCommand(command);
+		return this.activitiesService.increasePodcastCommandByOne(command);
 	}
 	
 	@RequestMapping(
@@ -49,7 +49,7 @@ public class ActivityController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object listenPodcast (@RequestBody ActivityBoundary command) {
-		return this.activitiesService.implementPodcastCommand(command);
+		return this.activitiesService.increasePodcastCommandByOne(command);
 	}
 
 }

@@ -166,7 +166,7 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 
 	@Override
 	@Transactional
-	public Object implementPodcastCommand(ActivityBoundary command) {
+	public Object increasePodcastCommandByOne(ActivityBoundary command) {
 		Object operation = command.getActivityAttributes().get("command");
 		// when operation is not properly defined
 		if (operation == null || !(operation instanceof String)){
