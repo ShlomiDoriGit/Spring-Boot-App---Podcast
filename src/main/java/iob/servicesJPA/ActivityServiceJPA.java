@@ -160,15 +160,16 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 	/*
 	 * {"dynamicField":{"command":"upvote"}}
 	 * {"dynamicField":{"command":"downvote"}}
+	 * 
+	 * {"dynamicField":{"command":"listen"}}
 	 */
 
 	@Override
 	@Transactional
-	public Object votePodcast(ActivityBoundary command) {
+	public Object implementPodcastCommand(ActivityBoundary command) {
 		Object operation = command.getActivityAttributes().get("command");
 		// when operation is not properly defined
-		if (operation == null || !(operation instanceof String) || 
-				!operation.toString().equals("upvote") || !operation.toString().equals("downvote")){
+		if (operation == null || !(operation instanceof String)){
 			throw new BadRequestException("This operation is not properly defined");
 		}
 		ActivityId activityId = new ActivityId(command.getActivityId().getDomain(), command.getActivityId().getId());
@@ -182,12 +183,20 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 			throw new NotFoundException("The Podcast did not found");
 		}
 		
-		String operation_key = operation.toString();
-		int operation_new_value = (int)activity.getActivityAttributes().get(operation_key) + 1;
-		activity.getActivityAttributes().replace(operation_key, operation_new_value);
+		
+		
+		try {
+			String operation_key = operation.toString();
+			int operation_new_value = (int)activity.getActivityAttributes().get(operation_key) + 1;
+			activity.getActivityAttributes().replace(operation_key, operation_new_value);
+		} catch (Exception e) {
+			throw new BadRequestException("This operation is not properly defined");
+		}
+		
 		
 		this.activityDao.save(activity);
 		return this.activityConverter.convertToBoundary(activity);
 	}
+	
 
 }

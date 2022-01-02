@@ -40,7 +40,16 @@ public class ActivityController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object votePodcast (@RequestBody ActivityBoundary command) {
-		return this.activitiesService.votePodcast(command);
+		return this.activitiesService.implementPodcastCommand(command);
+	}
+	
+	@RequestMapping(
+			path="/iob/activities/listen",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object listenPodcast (@RequestBody ActivityBoundary command) {
+		return this.activitiesService.implementPodcastCommand(command);
 	}
 
 }

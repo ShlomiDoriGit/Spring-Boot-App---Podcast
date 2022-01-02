@@ -8,6 +8,6 @@ public interface EnhancedActivitiesService extends ActivitiesService {
 
 	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail, int page, int size);
 	
-	public Object votePodcast(ActivityBoundary command);
+	public Object implementPodcastCommand(ActivityBoundary command);
 
 }
