@@ -43,7 +43,7 @@ public class ActivitiesServiceMockup implements ActivitiesService {
 	}
 
 	@Override
-	public Object invokeActivity(ActivityBoundary activity) {
+	public ActivityBoundary invokeActivity(ActivityBoundary activity) {
 		//TODO : After Eyal's answer
 		ActivityEntity entity = this.activityConverter.convertToEntity(activity);
 		//entity.setActivityId(UUID.randomUUID().toString());

@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import iob.logic.ActivitiesService;
+import iob.logic.EnhancedActivitiesService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class ActivityController {
 
-	private ActivitiesService activitiesService;
+	private EnhancedActivitiesService activitiesService;
 	
 	@Autowired
-	public ActivityController(ActivitiesService activitiesService) {
+	public ActivityController(EnhancedActivitiesService activitiesService) {
 		this.activitiesService = activitiesService;
 	}
 	
@@ -31,7 +31,16 @@ public class ActivityController {
 				produces = MediaType.APPLICATION_JSON_VALUE,
 				consumes = MediaType.APPLICATION_JSON_VALUE)
 		public ActivityBoundary invokeAnInstanceActivity(@RequestBody ActivityBoundary activity) {
-		return (ActivityBoundary) activitiesService.invokeActivity(activity);
+		return activitiesService.invokeActivity(activity);
 		}
+	
+	@RequestMapping(
+			path="/iob/activities/vote",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object votePodcast (@RequestBody ActivityBoundary command) {
+		return this.activitiesService.votePodcast(command);
+	}
 
 }

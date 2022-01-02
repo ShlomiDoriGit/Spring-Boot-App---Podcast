@@ -6,7 +6,7 @@ import iob.ActivitiesAPI.ActivityBoundary;
 
 public interface ActivitiesService {
 
-	public Object invokeActivity(ActivityBoundary activity);
+	public ActivityBoundary invokeActivity(ActivityBoundary activity);
 
 	@Deprecated
 	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail);

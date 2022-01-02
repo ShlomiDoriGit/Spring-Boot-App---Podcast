@@ -23,13 +23,16 @@ import iob.ActivitiesAPI.ActivityId;
 import iob.Dao.ActivityDao;
 import iob.Dao.InstanceDao;
 import iob.Dao.UserDao;
+import iob.InstancesAPI.InstanceId;
 import iob.UsersRelatedAPI.UserId;
 import iob.converters.ActivityConverter;
 import iob.data.ActivityEntity;
+import iob.data.InstanceEntity;
 import iob.data.UserEntity;
 import iob.data.UserRole;
 import iob.errors.BadRequestException;
 import iob.errors.ForbiddenRequestException;
+import iob.errors.NotFoundException;
 import iob.logic.EnhancedActivitiesService;
 
 @Service
@@ -60,7 +63,7 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 
 	@Override
 	@Transactional
-	public Object invokeActivity(ActivityBoundary activity) {
+	public ActivityBoundary invokeActivity(ActivityBoundary activity) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(
 				activity.getInvokedBy().getUserId().getDomain(), activity.getInvokedBy().getUserId().getEmail()));
@@ -108,6 +111,7 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated
 	public List<ActivityBoundary> getAllActivities(String adminDomain, String adminEmail) {
 		throw new BadRequestException("Uninmplemented deprecated operation");
 	}
@@ -151,6 +155,39 @@ public class ActivityServiceJPA implements EnhancedActivitiesService {
 		} else
 			throw new BadRequestException("Can't find user with domain : " + adminDomain + " and id : " + adminEmail);
 
+	}
+	
+	/*
+	 * {"dynamicField":{"command":"upvote"}}
+	 * {"dynamicField":{"command":"downvote"}}
+	 */
+
+	@Override
+	@Transactional
+	public Object votePodcast(ActivityBoundary command) {
+		Object operation = command.getActivityAttributes().get("command");
+		// when operation is not properly defined
+		if (operation == null || !(operation instanceof String) || 
+				!operation.toString().equals("upvote") || !operation.toString().equals("downvote")){
+			throw new BadRequestException("This operation is not properly defined");
+		}
+		ActivityId activityId = new ActivityId(command.getActivityId().getDomain(), command.getActivityId().getId());
+		ActivityEntity activity = this.activityDao.findById(activityId).orElse(null);
+		if (activity == null) {
+			throw new NotFoundException("The Podcast did not found");
+		}
+		InstanceId instanceId = new InstanceId(activity.getActivityInstanceDomain(), activity.getActivityInstanceId());
+		InstanceEntity instancePodcast = this.instanceDao.findById(instanceId).orElse(null);
+		if (instancePodcast == null) {
+			throw new NotFoundException("The Podcast did not found");
+		}
+		
+		String operation_key = operation.toString();
+		int operation_new_value = (int)activity.getActivityAttributes().get(operation_key) + 1;
+		activity.getActivityAttributes().replace(operation_key, operation_new_value);
+		
+		this.activityDao.save(activity);
+		return this.activityConverter.convertToBoundary(activity);
 	}
 
 }
