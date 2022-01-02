@@ -331,8 +331,8 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPaginatio
 			creationWindowEnum = CreationWindow.LAST_30_DAYS;
 		}
 		
-		Date startTimestamp;
-		Date endTimestamp = new Date();
+		Date startTimestamp; // NOW - X TIME
+		Date endTimestamp = new Date(); //NOW
 		
 		
 		long day = 1000 * 60 * 60 * 24;
