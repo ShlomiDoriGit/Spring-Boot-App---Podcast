@@ -3,6 +3,7 @@ package iob.servicesJPA;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,6 +66,7 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPaginatio
 	public InstanceBoundary createInstance(String userDomain, String userEmail, InstanceBoundary instance) {
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(new UserId(userDomain, userEmail));
+
 		if (optionalUser.isPresent()) {
 
 			InstanceEntity entity = this.instanceConverter.convertToEntity(instance);
@@ -141,8 +143,23 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPaginatio
 					entity.setLng(update.getLocation().getLng());
 				}
 			}
-			if (update.getInstanceAttributes() != null)
-				entity.setInstanceAttributes(update.getInstanceAttributes());
+			
+			
+			if (update.getInstanceAttributes() != null) {
+//				entity.setInstanceAttributes(update.getInstanceAttributes());
+				for (Entry<String, Object> entry : update.getInstanceAttributes().entrySet()) {
+					String key = entry.getKey();
+					Object val = entry.getValue();
+					try {
+					entity.getInstanceAttributes().replace(key, val);
+					}
+					catch(Exception e) {
+						entity.getInstanceAttributes().put(key, val);
+					}
+				}
+
+				
+			}
 
 			entity = this.instanceDao.save(entity);
 			return this.instanceConverter.convertToBoundary(entity);

@@ -35,10 +35,10 @@ public class InstanceConverter {
 		entity.setLat(32.115139);
 		entity.setLng(34.817804);
 		Map<String, Object> m = new HashMap<String, Object>();
-		m.put("key1", "can be set to any value you wish");
-		m.put("key2","you can also name the attributes any name you like");
-		m.put("key3", 6.2);
-		m.put("key4", false);
+//		m.put("key1", "can be set to any value you wish");
+//		m.put("key2","you can also name the attributes any name you like");
+//		m.put("key3", 6.2);
+//		m.put("key4", false);
 		
 		entity.setInstanceAttributes(m);
 		if (boundary.getInstanceId() != null) {
@@ -69,17 +69,18 @@ public class InstanceConverter {
 			if (boundary.getCreatedBy().getUserId().getEmail() != null) {
 				entity.setCreatedByUserEmail(boundary.getCreatedBy().getUserId().getEmail());
 			}
-			if (boundary.getLocation() != null) {
-				if (boundary.getLocation().getLat() != null) {
-					entity.setLat(boundary.getLocation().getLat());
-				}
-				if (boundary.getLocation().getLng() != null) {
-					entity.setLng(boundary.getLocation().getLng());
-				}
-				if (boundary.getInstanceAttributes() != null) {
-					entity.setInstanceAttributes(boundary.getInstanceAttributes());
-				}
+	
+		}
+		if (boundary.getLocation() != null) {
+			if (boundary.getLocation().getLat() != null) {
+				entity.setLat(boundary.getLocation().getLat());
 			}
+			if (boundary.getLocation().getLng() != null) {
+				entity.setLng(boundary.getLocation().getLng());
+			}
+		}
+		if (boundary.getInstanceAttributes() != null) {
+			entity.setInstanceAttributes(boundary.getInstanceAttributes());
 		}
 		return entity;
 	}
