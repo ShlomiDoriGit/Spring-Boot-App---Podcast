@@ -3,8 +3,6 @@ package iob.InstancesAPI;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import iob.Boundaries.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

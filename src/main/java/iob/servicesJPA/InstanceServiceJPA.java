@@ -9,7 +9,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.logging.log4j.util.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,7 +32,6 @@ import iob.data.UserRole;
 import iob.errors.BadRequestException;
 import iob.errors.ForbiddenRequestException;
 import iob.errors.NotFoundException;
-import iob.logic.EnhancedInstancesService;
 import iob.logic.EnhancedInstancesServiceWithPagination;
 
 @Service
@@ -348,8 +346,8 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPaginatio
 			creationWindowEnum = CreationWindow.LAST_30_DAYS;
 		}
 		
-		Date startTimestamp;
-		Date endTimestamp = new Date();
+		Date startTimestamp; // NOW - X TIME
+		Date endTimestamp = new Date(); //NOW
 		
 		
 		long day = 1000 * 60 * 60 * 24;

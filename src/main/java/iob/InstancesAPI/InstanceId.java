@@ -22,6 +22,8 @@ import lombok.Setter;
 @Setter
 public class InstanceId implements Serializable {
 	
+	private static final long serialVersionUID = 2604855053996550469L;
+	
 	@Column(name = "INSTANCE_DOMAIN")
 	private String domain;
 	@Column(name = "INSTANCE_ID")
