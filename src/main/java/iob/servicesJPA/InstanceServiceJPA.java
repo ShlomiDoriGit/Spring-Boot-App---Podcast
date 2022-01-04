@@ -329,9 +329,9 @@ public class InstanceServiceJPA implements EnhancedInstancesServiceWithPaginatio
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<InstanceBoundary> searchByLocation(double lat, double lng, int size, int page) {
-		List<InstanceEntity> entities = this.instanceDao.findByLatAndLng(lat, lng,
-				PageRequest.of(page, size, Direction.DESC, "lat", "lng", "createdTimestamp", "insanceId"));
+	public List<InstanceBoundary> searchByLocation(double lat, double lng,int size, int page) {
+		List<InstanceEntity> entities = this.instanceDao.findByLatAndLng(lat,lng,
+				PageRequest.of(page, size, Direction.DESC, "lat", "lng","createdTimestamp", "insanceId"));
 		return entitiesToBoundaries(entities);
 	}
 

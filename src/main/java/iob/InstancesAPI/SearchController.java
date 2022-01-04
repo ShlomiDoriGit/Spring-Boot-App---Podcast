@@ -21,7 +21,7 @@ public class SearchController {
 		this.instances = instances;
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/byName/{name}?size={size}&page={page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/byName/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public InstanceBoundary[] searchByName(@PathVariable("name") String name,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
@@ -29,21 +29,21 @@ public class SearchController {
 
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/byType/{type}?size={size}&page={page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] searchByType(@PathVariable("name") String name,
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/byType/{type}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] searchByType(@PathVariable("type") String type,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-		return this.instances.searchByType(name, size, page).toArray(new InstanceBoundary[0]);
+		return this.instances.searchByType(type, size, page).toArray(new InstanceBoundary[0]);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/near/{lat}/{lng}/{distance}?size={size}&page={page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public InstanceBoundary[] searchByLocation(@PathVariable("lat") double lat, @PathVariable("lng") double lng,
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/near/{lat}/{lng}/{distance}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public InstanceBoundary[] searchByLocation(@PathVariable("lat") double lat, @PathVariable("lng") double lng,@PathVariable("lng") double distnace,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-		return instances.searchByLocation(lat, lng, size, page).toArray(new InstanceBoundary[0]);
+		return instances.searchByLocation(lat, lng,size, page).toArray(new InstanceBoundary[0]);
 	}
 
-	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/created/{creationWindow}?size={size}&page={page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/iob/instances/{userDomain}/{userEmail}/search/created/{creationWindow}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public InstanceBoundary[] searchByCreate(@PathVariable("creationWindow") String creationWindow,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
